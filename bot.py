@@ -26,21 +26,21 @@ PLANS = {
         "price": 99,
         "duration": "1 месяц",
         "features": ["1 подключение", "10+ стран", "Базовая поддержка"],
-        "yoomoney": "https://yoomoney.ru/quickpay/confirm.xml?receiver=4100118775331265&quickpay-form=shop&targets=MorphVPN+Базовый&paymentType=AC&sum=99&label=basic"
+        "yoomoney": "https://yoomoney.ru/to/4100118775331265/99"
     },
     "premium": {
         "name": "Премиум",
         "price": 199,
         "duration": "1 месяц",
         "features": ["5 подключений", "10+ стран", "Приоритетная поддержка", "Без логирования"],
-        "yoomoney": "https://yoomoney.ru/quickpay/confirm.xml?receiver=4100118775331265&quickpay-form=shop&targets=MorphVPN+Премиум&paymentType=AC&sum=199&label=premium"
+        "yoomoney": "https://yoomoney.ru/to/4100118775331265/199"
     },
     "yearly": {
         "name": "Годовой",
         "price": 240,
         "duration": "1 месяц",
         "features": ["5 подключений", "10+ стран", "24/7 поддержка", "Без логирования"],
-        "yoomoney": "https://yoomoney.ru/quickpay/confirm.xml?receiver=4100118775331265&quickpay-form=shop&targets=MorphVPN+Годовой&paymentType=AC&sum=240&label=yearly"
+        "yoomoney": "https://yoomoney.ru/to/4100118775331265/240"
     }
 }
 
