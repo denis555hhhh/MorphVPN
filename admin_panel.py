@@ -25,6 +25,35 @@ except ImportError:
 TOKEN       = os.getenv("TOKEN", "8753394596:AAEA67fhil5B_R9iP-j5M5ZnIoOjhkykxDA")
 DATABASE_URL = os.getenv("DATABASE_URL", "")
 BOT_SCRIPT  = os.path.join(os.path.dirname(__file__), "bot.py")
+ENV_FILE    = os.path.join(os.path.dirname(__file__), ".env")
+
+def load_env():
+    """Загружаем .env файл если есть"""
+    global DATABASE_URL, TOKEN
+    if os.path.exists(ENV_FILE):
+        with open(ENV_FILE, "r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith("#") or "=" not in line:
+                    continue
+                key, _, val = line.partition("=")
+                key = key.strip()
+                val = val.strip().strip('"').strip("'")
+                if key == "DATABASE_URL" and val:
+                    DATABASE_URL = val
+                    os.environ["DATABASE_URL"] = val
+                if key == "TOKEN" and val:
+                    TOKEN = val
+                    os.environ["TOKEN"] = val
+
+def save_env():
+    """Сохраняем настройки в .env"""
+    lines = [
+        f'TOKEN={TOKEN}\n',
+        f'DATABASE_URL={DATABASE_URL}\n',
+    ]
+    with open(ENV_FILE, "w", encoding="utf-8") as f:
+        f.writelines(lines)
 
 bot_process = None
 
@@ -70,20 +99,22 @@ def main_menu():
     clear()
     header()
     status_line()
-    print(f"""  {W}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{RST}
-  {G}[1]{RST} 🚀  Запустить бота
-  {R}[2]{RST} ⛔  Остановить бота
-  {Y}[3]{RST} 🔄  Перезапустить бота
-  {C}[4]{RST} 📊  Статистика (БД)
-  {B}[5]{RST} 👥  Список пользователей
-  {M}[6]{RST} 📦  Список заказов
-  {W}[7]{RST} ✅  Подтверждённые оплаты
-  {C}[8]{RST} 🔍  Найти пользователя
-  {Y}[9]{RST} 🗑   Очистить pending-заказы
-  {G}[10]{RST} 📋  Просмотр логов бота
-  {R}[0]{RST} ❌  Выход
-  {W}━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━{RST}""")
-    return input(f"\n  {C}Выбери пункт:{RST} ").strip()
+    db_hint = f"{DIM}  <- нажми чтобы задать{RST}" if not DATABASE_URL else ""
+    print(f"  {W}{'='*54}{RST}")
+    print(f"  {G}[1]{RST}  Запустить бота")
+    print(f"  {R}[2]{RST}  Остановить бота")
+    print(f"  {Y}[3]{RST}  Перезапустить бота")
+    print(f"  {C}[4]{RST}  Статистика (БД)")
+    print(f"  {B}[5]{RST}  Список пользователей")
+    print(f"  {M}[6]{RST}  Список заказов")
+    print(f"  {W}[7]{RST}  Подтверждённые оплаты")
+    print(f"  {C}[8]{RST}  Найти пользователя")
+    print(f"  {Y}[9]{RST}  Очистить pending-заказы")
+    print(f"  {G}[10]{RST} Просмотр логов бота")
+    print(f"  {Y}[11]{RST} Настройки (DATABASE_URL / TOKEN){db_hint}")
+    print(f"  {R}[0]{RST}  Выход")
+    print(f"  {W}{'='*54}{RST}")
+    return input(f"\n  Выбери пункт: ").strip()
 
 # ─── 1. Запуск бота ───────────────────────────────────────────────────────────
 def start_bot():
@@ -305,6 +336,45 @@ def clear_pending():
         conn.close()
     pause()
 
+# ─── 11. Настройки ───────────────────────────────────────────────────────────
+def settings_menu():
+    global DATABASE_URL, TOKEN
+    clear()
+    header()
+    db_short = (DATABASE_URL[:40] + "...") if len(DATABASE_URL) > 40 else (DATABASE_URL or "НЕ ЗАДАН")
+    tok_short = TOKEN[:20] + "..." if TOKEN else "НЕ ЗАДАН"
+    print(f"""
+  {W}Текущие настройки:{RST}
+  {C}DATABASE_URL:{RST} {Y}{db_short}{RST}
+  {C}TOKEN:{RST}        {Y}{tok_short}{RST}
+
+  {W}[1]{RST} Задать DATABASE_URL
+  {W}[2]{RST} Задать TOKEN
+  {W}[0]{RST} Назад
+""")
+    ch = input("  Выбери: ").strip()
+    if ch == "1":
+        print(f"\n  {C}Где найти DATABASE_URL:{RST}")
+        print(f"  Railway -> твой проект -> PostgreSQL -> Variables -> DATABASE_URL\n")
+        val = input("  Вставь DATABASE_URL: ").strip()
+        if val:
+            DATABASE_URL = val
+            os.environ["DATABASE_URL"] = val
+            save_env()
+            print(f"\n  {G}✓ DATABASE_URL сохранён!{RST}")
+        else:
+            print(f"  {Y}Пусто — не сохранено{RST}")
+    elif ch == "2":
+        val = input("  Вставь TOKEN: ").strip()
+        if val:
+            TOKEN = val
+            os.environ["TOKEN"] = val
+            save_env()
+            print(f"\n  {G}✓ TOKEN сохранён!{RST}")
+        else:
+            print(f"  {Y}Пусто — не сохранено{RST}")
+    pause()
+
 # ─── 10. Логи бота ────────────────────────────────────────────────────────────
 def show_logs():
     log_file = os.path.join(os.path.dirname(__file__), "bot.log")
@@ -328,6 +398,9 @@ def show_logs():
 
 # ─── ГЛАВНЫЙ ЦИКЛ ─────────────────────────────────────────────────────────────
 def run():
+    # Загружаем .env если есть
+    load_env()
+
     # Установка зависимостей если нужно
     try:
         import psycopg2
@@ -350,6 +423,7 @@ def run():
         elif choice == "8":  search_user()
         elif choice == "9":  clear_pending()
         elif choice == "10": show_logs()
+        elif choice == "11": settings_menu()
         elif choice == "0":
             stop_bot()
             print(f"\n{G}  До свидания!{RST}\n")
