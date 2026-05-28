@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Статус серверов — MorphVPN</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .status-hero {
+            padding: 4rem 0 2rem;
+            text-align: center;
+        }
+        .status-hero h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        .status-hero p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .overall-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin: 2rem auto;
+            padding: 1.2rem 2.5rem;
+            background: rgba(0, 255, 120, 0.08);
+            border: 1px solid rgba(0, 255, 120, 0.3);
+            border-radius: 1rem;
+            max-width: 420px;
+            backdrop-filter: blur(10px);
+        }
+        .overall-dot {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: #00ff78;
+            box-shadow: 0 0 12px #00ff78;
+            animation: pulse-green 2s infinite;
+            flex-shrink: 0;
+        }
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 8px #00ff78; }
+            50% { box-shadow: 0 0 20px #00ff78, 0 0 40px rgba(0,255,120,0.3); }
+        }
+        .overall-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #00ff78;
+        }
+
+        .status-section {
+            padding: 1rem 0 4rem;
+        }
+        .status-section h2 {
+            font-size: 1.3rem;
+            color: var(--text-light);
+            margin-bottom: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            font-weight: 600;
+        }
+
+        .server-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .server-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.1rem 1.5rem;
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(45, 55, 72, 0.8));
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 0.8rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s;
+        }
+        .server-item:hover {
+            border-color: rgba(0, 212, 255, 0.4);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.1);
+        }
+
+        .server-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .server-flag {
+            font-size: 1.6rem;
+            line-height: 1;
+        }
+        .server-info h4 {
+            color: var(--text-dark);
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 2px;
+        }
+        .server-info span {
+            color: var(--text-light);
+            font-size: 0.8rem;
+        }
+
+        .server-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        .server-ping {
+            text-align: right;
+        }
+        .server-ping .ping-value {
+            color: var(--primary-color);
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        .server-ping .ping-label {
+            color: var(--text-light);
+            font-size: 0.75rem;
+        }
+        .server-load {
+            text-align: right;
+            min-width: 60px;
+        }
+        .load-bar-wrap {
+            width: 80px;
+            height: 6px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-bottom: 4px;
+        }
+        .load-bar {
+            height: 100%;
+            border-radius: 3px;
+            background: linear-gradient(90deg, #00d4ff, #00ff78);
+        }
+        .load-bar.medium {
+            background: linear-gradient(90deg, #ffaa00, #ff6600);
+        }
+        .load-bar.low {
+            background: linear-gradient(90deg, #00ff78, #00d4ff);
+        }
+        .load-label {
+            color: var(--text-light);
+            font-size: 0.75rem;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0.3rem 0.8rem;
+            border-radius: 2rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-width: 90px;
+            justify-content: center;
+        }
+        .status-badge.online {
+            background: rgba(0, 255, 120, 0.1);
+            border: 1px solid rgba(0, 255, 120, 0.3);
+            color: #00ff78;
+        }
+        .status-badge .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #00ff78;
+            box-shadow: 0 0 6px #00ff78;
+            animation: pulse-green 2s infinite;
+        }
+
+        .uptime-section {
+            margin-top: 3rem;
+        }
+        .uptime-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.2rem;
+            margin-top: 1.2rem;
+        }
+        .uptime-card {
+            background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(45, 55, 72, 0.8));
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: 0.8rem;
+            padding: 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        .uptime-card .uptime-value {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #00ff78;
+            text-shadow: 0 0 10px rgba(0,255,120,0.4);
+        }
+        .uptime-card .uptime-label {
+            color: var(--text-light);
+            font-size: 0.85rem;
+            margin-top: 4px;
+        }
+
+        .last-updated {
+            text-align: center;
+            color: var(--text-light);
+            font-size: 0.8rem;
+            margin-top: 2rem;
+            opacity: 0.6;
+        }
+
+        @media (max-width: 600px) {
+            .server-right { gap: 1rem; }
+            .server-load { display: none; }
+            .server-ping { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo"><a href="index.html" style="text-decoration:none;color:inherit;">MorphVPN</a></div>
+            <ul class="nav-links">
+                <li><a href="index.html#features">Возможности</a></li>
+                <li><a href="index.html#pricing">Тарифы</a></li>
+                <li><a href="index.html#faq">FAQ</a></li>
+                <li><a href="status.html" style="color:var(--primary-color)">Статус</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Заголовок -->
+        <div class="status-hero">
+            <h1>Статус серверов</h1>
+            <p>Мониторинг всех серверов MorphVPN в реальном времени</p>
+        </div>
+
+        <!-- Общий статус -->
+        <div class="overall-status">
+            <div class="overall-dot"></div>
+            <div class="overall-text">Все системы работают нормально</div>
+        </div>
+
+        <!-- Серверы -->
+        <div class="status-section">
+            <h2>🌍 Серверы по странам</h2>
+            <div class="server-list">
+
+                <div class="server-item">
+                    <div class="server-left">
+                        <div class="server-flag">🇩🇪</div>
+                        <div class="server-info">
+                            <h4>Германия — Франкфурт</h4>
+                            <span>DE-FRA-01 · 256-bit AES</span>
+                        </div>
+                    </div>
+                    <div class="server-right">
+                        <div class="server-ping">
+                            <div class="ping-value">12 мс</div>
+                            <div class="ping-label">Пинг</div>
+                        </div>
+                        <div class="server-load">
+                            <div class="load-bar-wrap"><div class="load-bar low" style="width:34%"></div></div>
+                            <div class="load-label">34% нагрузка</div>
+                        </div>
+                        <div class="status-badge online"><div class="dot"></div>Онлайн</div>
+                    </div>
+                </div>
+
+                <div class="server-item">
+                    <div class="server-left">
+                        <div class="server-flag">🇳🇱</div>
+                        <div class="server-info">
+                            <h4>Нидерланды — Амстердам</h4>
+                            <span>NL-AMS-01 · 256-bit AES</span>
+                        </div>
+                    </div>
+                    <div class="server-right">
+                        <div class="server-ping">
+                            <div class="ping-value">18 мс</div>
+                            <div class="ping-label">Пинг</div>
+                        </div>
+                        <div class="server-load">
+                            <div class="load-bar-wrap"><div class="load-bar low" style="width:21%"></div></div>
+                            <div class="load-label">21% нагрузка</div>
+                        </div>
+                        <div class="status-badge online"><div class="dot"></div>Онлайн</div>
+                    </div>
+                </div>
+
+                <div class="server-item">
+                    <div class="server-left">
+                        <div class="server-flag">🇫🇮</div>
+                        <div class="server-info">
+                            <h4>Финляндия — Хельсинки</h4>
+                            <span>FI-HEL-01 · 256-bit AES</span>
+                        </div>
+                    </div>
+                    <div class="server-right">
+                        <div class="server-ping">
+                            <div class="ping-value">9 мс</div>
+                            <div class="ping-label">Пинг</div>
+                        </div>
+                        <div class="server-load">
+                            <div class="load-bar-wrap"><div class="load-bar low" style="width:17%"></div></div>
+                            <div class="load-label">17% нагрузка</div>
+                        </div>
+                        <div class="status-badge online"><div class="dot"></div>Онлайн</div>
+                    </div>
+                </div>
+
+                <div class="server-item">
+                    <div class="server-left">
+                        <div class="server-flag">🇺🇸</div>
+                        <div class="server-info">
+                            <h4>США — Нью-Йорк</h4>
+                            <span>US-NYC-01 · 256-bit AES</span>
+                        </div>
+                    </div>
+                    <div class="server-right">
+                        <div class="server-ping">
+                            <div class="ping-value">87 мс</div>
+                            <div class="ping-label">Пинг</div>
+                        </div>
+                        <div class="server-load">
+                            <div class="load-bar-wrap"><div class="load-bar medium" style="width:58%"></div></div>
+                            <div class="load-label">58% нагрузка</div>
+                        </div>
+                        <div class="status-badge online"><div class="dot"></div>Онлайн</div>
+                    </div>
+                </div>
+
+                <div class="server-item">
+                    <div class="server-left">
+                        <div class="server-flag">🇬🇧</div>
+                        <div class="server-info">
+                            <h4>Великобритания — Лондон</h4>
+                            <span>GB-LON-01 · 256-bit AES</span>
+                        </div>
+                    </div>
+                    <div class="server-right">
+                        <div class="server-ping">
+                            <div class="ping-value">24 мс</div>
+                            <div class="ping-label">Пинг</div>
+                        </div>
+                        <div class="server-load">
+                            <div class="load-bar-wrap"><div class="load-bar low" style="width:29%"></div></div>
+                            <div class="load-label">29% нагрузка</div>
+                        </div>
+                        <div class="status-badge online"><div class="dot"></div>Онлайн</div>
+                    </div>
+                </div>
+
+                <div class="server-item">
+                    <div class="server-left">
+                        <div class="server-flag">🇫🇷</div>
+                        <div class="server-info">
+                            <h4>Франция — Париж</h4>
+                            <span>FR-PAR-01 · 256-bit AES</span>
+                        </div>
+                    </div>
+                    <div class="server-right">
+                        <div class="server-ping">
+                            <div class="ping-value">31 мс</div>
+                            <div class="ping-label">Пинг</div>
+                        </div>
+                        <div class="server-load">
+                            <div class="load-bar-wrap"><div class="load-bar low" style="width:42%"></div></div>
+                            <div class="load-label">42% нагрузка</div>
+                        </div>
+                        <div class="status-badge online"><div class="dot"></div>Онлайн</div>
+                    </div>
+                </div>
+
+                <div class="server-item">
+                    <div class="server-left">
+                        <div class="server-flag">🇸🇬</div>
+                        <div class="server-info">
+                            <h4>Сингапур</h4>
+                            <span>SG-SIN-01 · 256-bit AES</span>
+                        </div>
+                    </div>
+                    <div class="server-right">
+                        <div class="server-ping">
+                            <div class="ping-value">143 мс</div>
+                            <div class="ping-label">Пинг</div>
+                        </div>
+                        <div class="server-load">
+                            <div class="load-bar-wrap"><div class="load-bar low" style="width:25%"></div></div>
+                            <div class="load-label">25% нагрузка</div>
+                        </div>
+                        <div class="status-badge online"><div class="dot"></div>Онлайн</div>
+                    </div>
+                </div>
+
+                <div class="server-item">
+                    <div class="server-left">
+                        <div class="server-flag">🇨🇭</div>
+                        <div class="server-info">
+                            <h4>Швейцария — Цюрих</h4>
+                            <span>CH-ZRH-01 · 256-bit AES</span>
+                        </div>
+                    </div>
+                    <div class="server-right">
+                        <div class="server-ping">
+                            <div class="ping-value">22 мс</div>
+                            <div class="ping-label">Пинг</div>
+                        </div>
+                        <div class="server-load">
+                            <div class="load-bar-wrap"><div class="load-bar low" style="width:19%"></div></div>
+                            <div class="load-label">19% нагрузка</div>
+                        </div>
+                        <div class="status-badge online"><div class="dot"></div>Онлайн</div>
+                    </div>
+                </div>
+
+                <div class="server-item">
+                    <div class="server-left">
+                        <div class="server-flag">🇸🇪</div>
+                        <div class="server-info">
+                            <h4>Швеция — Стокгольм</h4>
+                            <span>SE-STO-01 · 256-bit AES</span>
+                        </div>
+                    </div>
+                    <div class="server-right">
+                        <div class="server-ping">
+                            <div class="ping-value">14 мс</div>
+                            <div class="ping-label">Пинг</div>
+                        </div>
+                        <div class="server-load">
+                            <div class="load-bar-wrap"><div class="load-bar low" style="width:11%"></div></div>
+                            <div class="load-label">11% нагрузка</div>
+                        </div>
+                        <div class="status-badge online"><div class="dot"></div>Онлайн</div>
+                    </div>
+                </div>
+
+                <div class="server-item">
+                    <div class="server-left">
+                        <div class="server-flag">🇯🇵</div>
+                        <div class="server-info">
+                            <h4>Япония — Токио</h4>
+                            <span>JP-TYO-01 · 256-bit AES</span>
+                        </div>
+                    </div>
+                    <div class="server-right">
+                        <div class="server-ping">
+                            <div class="ping-value">167 мс</div>
+                            <div class="ping-label">Пинг</div>
+                        </div>
+                        <div class="server-load">
+                            <div class="load-bar-wrap"><div class="load-bar low" style="width:38%"></div></div>
+                            <div class="load-label">38% нагрузка</div>
+                        </div>
+                        <div class="status-badge online"><div class="dot"></div>Онлайн</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Аптайм -->
+        <div class="uptime-section">
+            <h2 style="font-size:1.3rem;color:var(--text-light);text-transform:uppercase;letter-spacing:0.1em;font-weight:600;">📊 Статистика за 30 дней</h2>
+            <div class="uptime-grid">
+                <div class="uptime-card">
+                    <div class="uptime-value">99.97%</div>
+                    <div class="uptime-label">Общий аптайм</div>
+                </div>
+                <div class="uptime-card">
+                    <div class="uptime-value">10/10</div>
+                    <div class="uptime-label">Серверов онлайн</div>
+                </div>
+                <div class="uptime-card">
+                    <div class="uptime-value">18 мс</div>
+                    <div class="uptime-label">Средний пинг</div>
+                </div>
+                <div class="uptime-card">
+                    <div class="uptime-value">0</div>
+                    <div class="uptime-label">Инцидентов</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="last-updated">Последнее обновление: только что · Обновляется каждые 60 секунд</div>
+    </div>
+
+    <!-- Футер -->
+    <footer class="footer" style="margin-top:4rem;">
+        <div class="container">
+            <p>&copy; 2026 MorphVPN. Все права защищены.</p>
+            <div class="footer-links">
+                <a href="privacy.html">Политика конфиденциальности</a>
+                <a href="terms.html">Условия использования</a>
+                <a href="status.html">Статус сервера</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Кнопка Telegram поддержки -->
+    <a href="https://t.me/slogg12" class="telegram-support" target="_blank" title="Техподдержка в Telegram">
+        <span class="support-text">Поддержка</span>
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.328-.373-.115l-6.869 4.332-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.461c.54-.203 1.01.122.84.951z"/>
+        </svg>
+    </a>
+
+    <script>
+        // Обновляем время последнего обновления
+        function updateTime() {
+            const el = document.querySelector('.last-updated');
+            const now = new Date();
+            const time = now.toLocaleTimeString('ru-RU', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+            el.textContent = `Последнее обновление: ${time} · Обновляется каждые 60 секунд`;
+        }
+        updateTime();
+        setInterval(updateTime, 60000);
+    </script>
+</body>
+</html>
