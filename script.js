@@ -28,15 +28,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Обработка кнопок выбора тарифа
+    // Обработка кнопок выбора тарифа - перенаправление в бот
     const pricingButtons = document.querySelectorAll('.pricing-card .btn');
     pricingButtons.forEach(button => {
-        button.addEventListener('click', function() {
-            const card = this.closest('.pricing-card');
-            const title = card.querySelector('h3').textContent;
-            const price = card.querySelector('.amount').textContent;
-            
-            alert(`Вы выбрали тариф "${title}" за ${price} ₽. Перенаправление на страницу оплаты...`);
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'https://t.me/MorphVPN1_bot';
         });
     });
 
