@@ -49,7 +49,7 @@ def load_env():
     global TOKEN, DATABASE_URL
     if not os.path.exists(ENV_FILE):
         return
-    with open(ENV_FILE, "r", encoding="utf-8") as f:
+    with open(ENV_FILE, "r", encoding="utf-8", errors="ignore") as f:
         for line in f:
             line = line.strip()
             if not line or line.startswith("#") or "=" not in line:
@@ -62,7 +62,7 @@ def load_env():
                 DATABASE_URL = v; os.environ["DATABASE_URL"] = v
 
 def save_env():
-    with open(ENV_FILE, "w", encoding="utf-8") as f:
+    with open(ENV_FILE, "w", encoding="utf-8", newline="\n") as f:
         f.write(f"TOKEN={TOKEN}\n")
         f.write(f"DATABASE_URL={DATABASE_URL}\n")
 
