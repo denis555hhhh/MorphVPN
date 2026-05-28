@@ -402,6 +402,7 @@ body::before {
     text-align: center;
     text-decoration: none;
     cursor: pointer;
+    box-sizing: border-box;
 }
 
 /* FAQ */
