@@ -449,6 +449,7 @@ def action_update_deps():
 
 # ── 12. Настройки ─────────────────────────────────────────────────────────────
 def screen_settings():
+    global TOKEN, DATABASE_URL
     while True:
         header()
         db_short = (DATABASE_URL[:50] + "...") if len(DATABASE_URL) > 50 else (DATABASE_URL or f"{R}НЕ ЗАДАН{RST}")
@@ -473,14 +474,12 @@ def screen_settings():
             print(f"\n  {DIM}Текущий: {TOKEN[:20]}...{RST}")
             val = input("  Новый TOKEN: ").strip()
             if val:
-                global TOKEN
                 TOKEN = val; os.environ["TOKEN"] = val; save_env()
                 print(f"  {G}✓ TOKEN сохранён{RST}"); time.sleep(1)
         elif ch == "2":
             print(f"\n  {C}Где найти:{RST} Railway → проект → PostgreSQL → Variables → DATABASE_URL")
             val = input("  Вставь DATABASE_URL: ").strip()
             if val:
-                global DATABASE_URL
                 DATABASE_URL = val; os.environ["DATABASE_URL"] = val; save_env()
                 print(f"  {G}✓ DATABASE_URL сохранён{RST}"); time.sleep(1)
         elif ch == "3":
