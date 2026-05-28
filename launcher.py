@@ -597,11 +597,25 @@ class App(tk.Tk):
                          bg=BG3, fg=WHITE, insertbackground=WHITE,
                          bd=0, width=70, show=show)
             e.pack(fill="x", ipady=7, pady=(0,2))
+            # Явно разрешаем вставку
+            e.bind("<Control-v>", lambda ev: e.event_generate("<<Paste>>"))
+            e.bind("<Control-а>", lambda ev: e.select_range(0, "end"))
             tk.Frame(form, bg=CYAN, height=1).pack(fill="x")
             return var
 
         self.v_token = field("Telegram Bot TOKEN", TOKEN)
         self.v_db    = field("DATABASE_URL (Railway PostgreSQL)", DATABASE_URL)
+
+        # Кнопка вставить из буфера
+        paste_frame = tk.Frame(c, bg=BG)
+        paste_frame.pack(fill="x", padx=20, pady=(0,5))
+        def paste_db():
+            try:
+                val = self.clipboard_get()
+                self.v_db.set(val)
+            except:
+                messagebox.showinfo("Инфо", "Буфер обмена пуст")
+        self._btn(paste_frame, "📋 Вставить DATABASE_URL из буфера", paste_db, YELLOW, 35)
 
         def save():
             global TOKEN, DATABASE_URL
