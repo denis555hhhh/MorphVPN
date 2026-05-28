@@ -1,0 +1,16 @@
+{
+  "name": "morphvpn-website",
+  "version": "1.0.0",
+  "description": "MorphVPN - Безопасный VPN сервис",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["vpn", "security", "privacy"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
