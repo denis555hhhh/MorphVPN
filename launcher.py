@@ -584,38 +584,58 @@ class App(tk.Tk):
     def page_settings(self):
         self._clear_content()
         c = self.content
-        tk.Label(c, text="⚙️ Настройки", font=(FONT,18,"bold"),
+
+        # Скроллируемый контейнер
+        canvas = tk.Canvas(c, bg=BG, highlightthickness=0)
+        vsb = ttk.Scrollbar(c, orient="vertical", command=canvas.yview)
+        canvas.configure(yscrollcommand=vsb.set)
+        vsb.pack(side="right", fill="y")
+        canvas.pack(side="left", fill="both", expand=True)
+
+        inner = tk.Frame(canvas, bg=BG)
+        win = canvas.create_window((0,0), window=inner, anchor="nw")
+
+        def on_resize(e):
+            canvas.itemconfig(win, width=e.width)
+        canvas.bind("<Configure>", on_resize)
+        inner.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+
+        tk.Label(inner, text="⚙️ Настройки", font=(FONT,18,"bold"),
                  bg=BG, fg=WHITE).pack(pady=(25,15), padx=20, anchor="w")
 
-        form = tk.Frame(c, bg=BG); form.pack(fill="x", padx=20)
+        form = tk.Frame(inner, bg=BG)
+        form.pack(fill="x", padx=20)
 
-        def field(label, default, show=""):
+        def field(label, default):
             tk.Label(form, text=label, font=(FONT,10), bg=BG, fg=GRAY
                      ).pack(anchor="w", pady=(10,2))
             var = tk.StringVar(value=default)
             e = tk.Entry(form, textvariable=var, font=(FONT,10),
-                         bg=BG3, fg=WHITE, insertbackground=WHITE,
-                         bd=0, width=70, show=show)
-            e.pack(fill="x", ipady=7, pady=(0,2))
-            # Явно разрешаем вставку
-            e.bind("<Control-v>", lambda ev: e.event_generate("<<Paste>>"))
-            e.bind("<Control-а>", lambda ev: e.select_range(0, "end"))
+                         bg=BG3, fg=WHITE, insertbackground=WHITE, bd=0)
+            e.pack(fill="x", ipady=8, pady=(0,2))
             tk.Frame(form, bg=CYAN, height=1).pack(fill="x")
-            return var
+            return var, e
 
-        self.v_token = field("Telegram Bot TOKEN", TOKEN)
-        self.v_db    = field("DATABASE_URL (Railway PostgreSQL)", DATABASE_URL)
+        self.v_token, e_token = field("Telegram Bot TOKEN", TOKEN)
+        self.v_db,    e_db    = field("DATABASE_URL (Railway — используй DATABASE_PUBLIC_URL)", DATABASE_URL)
 
-        # Кнопка вставить из буфера
-        paste_frame = tk.Frame(c, bg=BG)
-        paste_frame.pack(fill="x", padx=20, pady=(0,5))
+        # Кнопка вставить
+        paste_frame = tk.Frame(inner, bg=BG)
+        paste_frame.pack(fill="x", padx=20, pady=8)
+
         def paste_db():
             try:
                 val = self.clipboard_get()
                 self.v_db.set(val)
             except:
                 messagebox.showinfo("Инфо", "Буфер обмена пуст")
-        self._btn(paste_frame, "📋 Вставить DATABASE_URL из буфера", paste_db, YELLOW, 35)
+
+        self._btn(paste_frame, "📋 Вставить из буфера", paste_db, YELLOW, 22)
+
+        # Подсказка
+        tk.Label(inner, text="💡 Где взять DATABASE_PUBLIC_URL:\nRailway → проект → Postgres → Variables → DATABASE_PUBLIC_URL",
+                 font=(FONT,9), bg=BG, fg=GRAY, justify="left"
+                 ).pack(padx=20, pady=(0,10), anchor="w")
 
         def save():
             global TOKEN, DATABASE_URL
@@ -630,15 +650,19 @@ class App(tk.Tk):
                 messagebox.showinfo("✅ Успех", "Подключение к БД успешно!")
                 conn.close()
             else:
-                messagebox.showerror("❌ Ошибка", "Не удалось подключиться к БД.\nПроверь DATABASE_URL")
+                messagebox.showerror("❌ Ошибка", "Не удалось подключиться.\nИспользуй DATABASE_PUBLIC_URL из Railway")
 
-        bf = tk.Frame(c, bg=BG); bf.pack(fill="x", padx=20, pady=15)
-        self._btn(bf, "💾 Сохранить",      save,    GREEN, 16)
-        self._btn(bf, "🔌 Проверить БД",   test_db, CYAN,  16)
-        self._btn(bf, "🌐 Открыть сайт",
+        bf = tk.Frame(inner, bg=BG)
+        bf.pack(fill="x", padx=20, pady=10)
+        self._btn(bf, "💾 Сохранить",    save,    GREEN,  16)
+        self._btn(bf, "🔌 Проверить БД", test_db, CYAN,   16)
+
+        bf2 = tk.Frame(inner, bg=BG)
+        bf2.pack(fill="x", padx=20, pady=5)
+        self._btn(bf2, "🌐 Открыть сайт",
                   lambda: webbrowser.open(SITE_URL), CYAN, 16)
-        self._btn(bf, "📊 API статистика",
-                  lambda: webbrowser.open(f"{SITE_URL}/api/stats?key=morphvpn2026"), YELLOW, 18)
+        self._btn(bf2, "📊 API статистика",
+                  lambda: webbrowser.open(f"{SITE_URL}/api/stats?key=morphvpn2026"), YELLOW, 20)
 
     # ── Управление ботом ──────────────────────────────────────────────────────
     def start_bot(self):
