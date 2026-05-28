@@ -152,6 +152,7 @@ class App(tk.Tk):
                  bg=BG2, fg=GRAY).pack(side="bottom", pady=10)
 
         # Показываем главную
+        self.update()
         self.page_home()
 
     def _nav_click(self, cmd):
@@ -252,7 +253,6 @@ class App(tk.Tk):
     # СТРАНИЦЫ
     # ══════════════════════════════════════════════════════════════════════════
 
-    # ── Главная ───────────────────────────────────────────────────────────────
     def page_home(self):
         self._clear_content()
         c = self.content
@@ -271,52 +271,71 @@ class App(tk.Tk):
         self._btn(btn_frame, "🌐  Открыть сайт",
                   lambda: webbrowser.open(SITE_URL), CYAN)
 
-        # Статистика
+        # Статистика — загружаем в потоке
         stats_frame = tk.Frame(c, bg=BG)
         stats_frame.pack(fill="x", padx=20, pady=5)
 
-        conn = get_db()
-        u=o=p=r=v=ct=0
-        if conn:
-            try:
-                with conn.cursor() as cur:
-                    cur.execute("SELECT COUNT(*) as c FROM users"); u=cur.fetchone()["c"]
-                    cur.execute("SELECT COUNT(*) as c FROM orders"); o=cur.fetchone()["c"]
-                    cur.execute("SELECT COUNT(*) as c FROM orders WHERE status='paid'"); p=cur.fetchone()["c"]
-                    cur.execute("SELECT COALESCE(SUM(price),0) as s FROM orders WHERE status='paid'"); r=cur.fetchone()["s"]
-                    cur.execute("SELECT COUNT(*) as c FROM visits"); v=cur.fetchone()["c"]
-                    cur.execute("SELECT COUNT(*) as c FROM contacts"); ct=cur.fetchone()["c"]
-            except: pass
-            finally: conn.close()
+        # Заглушки
+        boxes = {}
+        for key, lbl, col in [
+            ("u","Пользователей бота",CYAN),
+            ("p","Оплачено заказов",GREEN),
+            ("r","Выручка (₽)",YELLOW),
+            ("v","Посещений сайта",CYAN),
+            ("ct","Заявок с сайта",PINK),
+        ]:
+            boxes[key] = self._stat_box(stats_frame, lbl, "...", col)
 
-        self._stat_box(stats_frame, "Пользователей бота", u, CYAN)
-        self._stat_box(stats_frame, "Оплачено заказов",   p, GREEN)
-        self._stat_box(stats_frame, "Выручка (₽)",        r, YELLOW)
-        self._stat_box(stats_frame, "Посещений сайта",    v, CYAN)
-        self._stat_box(stats_frame, "Заявок с сайта",     ct, PINK)
-
-        # Последние заказы
+        # Таблица заголовок
         tk.Label(c, text="Последние заказы", font=(FONT,12,"bold"),
                  bg=BG, fg=WHITE).pack(padx=20, pady=(15,5), anchor="w")
 
-        conn = get_db()
-        rows = []
-        if conn:
-            try:
-                with conn.cursor() as cur:
-                    cur.execute("""
-                        SELECT o.id, u.first_name, o.plan_name, o.price, o.status,
-                               to_char(o.created_at,'DD.MM.YY HH24:MI') as dt
-                        FROM orders o LEFT JOIN users u ON o.user_id=u.user_id
-                        ORDER BY o.created_at DESC LIMIT 8
-                    """)
-                    rows = [(r["id"],r["first_name"] or "—",r["plan_name"],
-                             f"{r['price']}₽",r["status"],r["dt"]) for r in cur.fetchall()]
-            except: pass
-            finally: conn.close()
+        table_frame = tk.Frame(c, bg=BG)
+        table_frame.pack(fill="both", expand=True)
+        loading_lbl = tk.Label(table_frame, text="Загрузка данных...",
+                               font=(FONT,11), bg=BG, fg=GRAY)
+        loading_lbl.pack(pady=30)
 
-        self._table(c, ["#","Имя","Тариф","Цена","Статус","Дата"], rows,
-                    [40,120,100,70,80,120])
+        def load_data():
+            conn = get_db()
+            u=o=p=r=v=ct=0; rows=[]
+            if conn:
+                try:
+                    with conn.cursor() as cur:
+                        cur.execute("SELECT COUNT(*) as c FROM users"); u=cur.fetchone()["c"]
+                        cur.execute("SELECT COUNT(*) as c FROM orders"); o=cur.fetchone()["c"]
+                        cur.execute("SELECT COUNT(*) as c FROM orders WHERE status='paid'"); p=cur.fetchone()["c"]
+                        cur.execute("SELECT COALESCE(SUM(price),0) as s FROM orders WHERE status='paid'"); r=cur.fetchone()["s"]
+                        cur.execute("SELECT COUNT(*) as c FROM visits"); v=cur.fetchone()["c"]
+                        cur.execute("SELECT COUNT(*) as c FROM contacts"); ct=cur.fetchone()["c"]
+                        cur.execute("""SELECT o.id,u.first_name,o.plan_name,o.price,o.status,
+                                       to_char(o.created_at,'DD.MM.YY HH24:MI') as dt
+                                       FROM orders o LEFT JOIN users u ON o.user_id=u.user_id
+                                       ORDER BY o.created_at DESC LIMIT 8""")
+                        rows=[(r2["id"],r2["first_name"] or "—",r2["plan_name"],
+                               f"{r2['price']}₽",r2["status"],r2["dt"]) for r2 in cur.fetchall()]
+                except: pass
+                finally: conn.close()
+
+            def update_ui():
+                for widget in boxes["u"].winfo_children():
+                    if isinstance(widget, tk.Label) and widget.cget("font") and "28" in str(widget.cget("font")):
+                        widget.configure(text=str(u)); break
+                # Обновляем все боксы
+                def upd(box, val):
+                    for w in box.winfo_children():
+                        try:
+                            if "28" in str(w.cget("font")):
+                                w.configure(text=str(val)); return
+                        except: pass
+                upd(boxes["u"], u); upd(boxes["p"], p)
+                upd(boxes["r"], r); upd(boxes["v"], v); upd(boxes["ct"], ct)
+                loading_lbl.destroy()
+                self._table(table_frame, ["#","Имя","Тариф","Цена","Статус","Дата"],
+                            rows, [40,120,100,70,80,120])
+            self.after(0, update_ui)
+
+        threading.Thread(target=load_data, daemon=True).start()
 
     # ── Статистика ────────────────────────────────────────────────────────────
     def page_stats(self):
@@ -696,7 +715,5 @@ class Splash(tk.Tk):
 # ══════════════════════════════════════════════════════════════════════════════
 if __name__ == "__main__":
     load_env()
-    splash = Splash()
-    splash.mainloop()
     app = App()
     app.mainloop()
