@@ -1,4 +1,5 @@
 import logging
+import os
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
 
@@ -9,8 +10,8 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-# Токен бота
-TOKEN = "8753394596:AAEA67fhil5B_R9iP-j5M5ZnIoOjhkykxDA"
+# Токен бота из переменной окружения
+TOKEN = os.getenv("TOKEN", "8753394596:AAEA67fhil5B_R9iP-j5M5ZnIoOjhkykxDA")
 
 # Тарифы
 PLANS = {
