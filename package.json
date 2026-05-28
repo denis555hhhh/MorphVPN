@@ -5,12 +5,17 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "bot": "python bot.py"
   },
   "keywords": ["vpn", "security", "privacy"],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "express": "^4.18.2"
+  },
+  "engines": {
+    "node": "18.x",
+    "python": "3.11.x"
   }
 }
