@@ -55,29 +55,77 @@ app.use(async (req, res, next) => {
     next();
 });
 
-// ── Прокси подписки 3X-UI ─────────────────────────────────────────────────────
-// Ссылка для пользователей: https://твой-домен.railway.app/vpn/ТОКЕН
-// Вместо: http://192.124.181.38:2096/sub/ТОКЕН
-const XUI_HOST = process.env.XUI_HOST || '192.124.181.38';
-const XUI_PORT = process.env.XUI_PORT || '2096';
-const XUI_PATH = process.env.XUI_PATH || '/sub';
+// ── Список серверов 3X-UI ─────────────────────────────────────────────────────
+// Добавляй сюда новые серверы — они автоматически появятся у ВСЕХ пользователей
+// Формат: { host, port, path }
+// Чтобы добавить сервер — просто добавь новый объект в массив XUI_SERVERS
+const XUI_SERVERS = (process.env.XUI_SERVERS
+    ? JSON.parse(process.env.XUI_SERVERS)
+    : [
+        { host: '192.124.181.38', port: '2096', path: '/sub' }
+        // Пример второго сервера:
+        // { host: '1.2.3.4', port: '2096', path: '/sub' }
+    ]
+);
 
-app.get('/vpn/:token', (req, res) => {
-    const { token } = req.params;
-    const url = `http://${XUI_HOST}:${XUI_PORT}${XUI_PATH}/${token}`;
-
-    http.get(url, (proxyRes) => {
-        // Пробрасываем заголовки от 3X-UI
-        const headers = { ...proxyRes.headers };
-        // Принудительно ставим заголовок профиля
-        headers['profile-title'] = 'base64:' + Buffer.from('MorphVPN').toString('base64');
-        headers['content-type'] = 'text/plain; charset=utf-8';
-        res.writeHead(proxyRes.statusCode, headers);
-        proxyRes.pipe(res);
-    }).on('error', (e) => {
-        console.error('Proxy error:', e.message);
-        res.status(502).send('VPN server unavailable');
+// Функция получения конфигов с одного сервера
+function fetchSubConfigs(host, port, subPath, token) {
+    return new Promise((resolve) => {
+        const url = `http://${host}:${port}${subPath}/${token}`;
+        http.get(url, (res) => {
+            let data = '';
+            res.on('data', chunk => data += chunk);
+            res.on('end', () => {
+                try {
+                    // Декодируем base64 если нужно
+                    const decoded = Buffer.from(data.trim(), 'base64').toString('utf8');
+                    // Если декодировалось нормально — используем decoded, иначе raw
+                    const lines = decoded.includes('://') ? decoded : data;
+                    resolve(lines.split('\n').filter(l => l.trim()));
+                } catch {
+                    resolve([]);
+                }
+            });
+        }).on('error', () => resolve([]));
     });
+}
+
+// ── Подписка: объединяет все серверы в одну ссылку ───────────────────────────
+// Ссылка для пользователей: https://morphvpn-production.up.railway.app/vpn/ТОКЕН
+app.get('/vpn/:token', async (req, res) => {
+    const { token } = req.params;
+
+    // Запрашиваем конфиги со всех серверов параллельно
+    const results = await Promise.all(
+        XUI_SERVERS.map(s => fetchSubConfigs(s.host, s.port, s.path, token))
+    );
+
+    // Объединяем все конфиги в один список
+    const allConfigs = results.flat().filter(Boolean);
+
+    if (allConfigs.length === 0) {
+        return res.status(404).send('No configs found');
+    }
+
+    const encoded = Buffer.from(allConfigs.join('\n')).toString('base64');
+
+    res.set({
+        'Content-Type': 'text/plain; charset=utf-8',
+        'profile-title': 'base64:' + Buffer.from('MorphVPN').toString('base64'),
+        'profile-update-interval': '12',
+        'support-url': 'https://t.me/slogg12',
+    });
+    res.send(encoded);
+});
+
+// ── API: добавить сервер в список (только для админа) ─────────────────────────
+// После добавления нужно перезапустить сервис или использовать переменную XUI_SERVERS в Railway
+app.get('/api/vpn/servers', (req, res) => {
+    const key = req.query.key;
+    if (key !== process.env.ADMIN_KEY && key !== 'morphvpn2026') {
+        return res.status(403).json({ error: 'Forbidden' });
+    }
+    res.json(XUI_SERVERS.map(s => ({ host: s.host, port: s.port, path: s.path })));
 });
 
 
