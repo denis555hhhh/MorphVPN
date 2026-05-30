@@ -109,10 +109,12 @@ body::before {
 
 .nav-links a {
     text-decoration: none;
-    color: var(--text-light);
+    color: #c084fc;
     transition: all 0.3s;
     position: relative;
     font-size: 0.95rem;
+    font-weight: 500;
+    text-shadow: 0 0 10px rgba(192,132,252,0.5), 0 0 20px rgba(168,85,247,0.3);
 }
 
 .nav-links a::after {
@@ -125,11 +127,12 @@ body::before {
     background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
     transition: width 0.3s;
     border-radius: 2px;
+    box-shadow: 0 0 8px rgba(168,85,247,0.8);
 }
 
 .nav-links a:hover {
-    color: var(--primary-bright);
-    text-shadow: 0 0 12px rgba(168,85,247,0.6);
+    color: #fff;
+    text-shadow: 0 0 12px rgba(192,132,252,1), 0 0 25px rgba(168,85,247,0.7), 0 0 40px rgba(168,85,247,0.3);
 }
 
 .nav-links a:hover::after { width: 100%; }
