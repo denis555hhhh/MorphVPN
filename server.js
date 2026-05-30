@@ -62,14 +62,14 @@ app.use(async (req, res, next) => {
 const XUI_SERVERS = (process.env.XUI_SERVERS
     ? JSON.parse(process.env.XUI_SERVERS)
     : [
-        { host: '192.124.181.38', port: '8080', path: '/sub' }
+        { host: '192.124.181.38', port: '8080', path: '' }
     ]
 );
 
 // Функция получения конфигов с одного сервера
 function fetchSubConfigs(host, port, subPath, token) {
     return new Promise((resolve) => {
-        const url = `http://${host}:${port}${subPath}/${token}`;
+        const url = `http://${host}:${port}/sub/${token}`;
         http.get(url, (res) => {
             let data = '';
             res.on('data', chunk => data += chunk);
