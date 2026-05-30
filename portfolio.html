@@ -105,15 +105,30 @@
             margin-bottom: 1rem;
             font-family: 'Arial Black', sans-serif;
             letter-spacing: -0.02em;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 0;
+            animation: type-name 0.7s steps(5, end) 0.2s forwards;
+        }
+        @keyframes type-name {
+            from { width: 0; }
+            to   { width: 6ch; }
         }
         .hero-role {
             font-size: 1rem;
             color: var(--text-muted);
             margin-bottom: 2rem;
             font-family: 'Courier New', monospace;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 0;
+            animation: type-role 1.4s steps(22, end) 1.1s forwards;
+        }
+        @keyframes type-role {
+            from { width: 0; }
+            to   { width: 22ch; }
         }
         .hero-role span {
-            color: var(--text);
             border-right: 2px solid var(--text);
             animation: blink 1s infinite;
             padding-right: 2px;
@@ -129,12 +144,20 @@
             line-height: 1.8;
             margin-bottom: 3rem;
             font-family: sans-serif;
+            opacity: 0;
+            transform: translateY(12px);
+            animation: fade-up 0.7s ease 2.7s forwards;
+        }
+        @keyframes fade-up {
+            to { opacity: 1; transform: translateY(0); }
         }
         .hero-bio strong { color: var(--text); font-weight: 600; }
         .hero-actions {
             display: flex;
             gap: 1rem;
             flex-wrap: wrap;
+            opacity: 0;
+            animation: fade-up 0.7s ease 3.1s forwards;
         }
         .btn-main {
             background: var(--accent);
