@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Denis — Developer Portfolio</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* ── Портфолио стили ── */
+        .portfolio-hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .portfolio-hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            pointer-events: none;
+        }
+        .avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            margin: 0 auto 1.5rem;
+            box-shadow: 0 0 40px rgba(0,212,255,0.3);
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .hero-name {
+            font-size: 3.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #fff, var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+        .hero-title {
+            font-size: 1.3rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        .hero-desc {
+            color: var(--text-light);
+            font-size: 1rem;
+            max-width: 500px;
+            margin: 0 auto 2rem;
+            line-height: 1.7;
+        }
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .status-dot {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(0,255,120,0.1);
+            border: 1px solid rgba(0,255,120,0.3);
+            border-radius: 2rem;
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+            color: #00ff78;
+            margin-bottom: 1.5rem;
+        }
+        .status-dot span {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff78;
+            box-shadow: 0 0 8px #00ff78;
+            animation: pulse-green 2s infinite;
+            flex-shrink: 0;
+        }
+        @keyframes pulse-green {
+            0%, 100% { box-shadow: 0 0 6px #00ff78; }
+            50% { box-shadow: 0 0 16px #00ff78; }
+        }
+
+        /* ── Навыки ── */
+        .skills-section {
+            padding: 5rem 0;
+        }
+        .skills-section h2 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #fff, var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        .skill-card {
+            background: linear-gradient(135deg, rgba(26,31,58,0.9), rgba(45,55,72,0.9));
+            border: 1px solid rgba(0,212,255,0.15);
+            border-radius: 1rem;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            transition: all 0.3s;
+            cursor: default;
+        }
+        .skill-card:hover {
+            border-color: rgba(0,212,255,0.5);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,212,255,0.15);
+        }
+        .skill-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .skill-name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.5rem;
+        }
+        .skill-level {
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        .skill-bar-wrap {
+            width: 100%;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+            margin-top: 0.8rem;
+            overflow: hidden;
+        }
+        .skill-bar {
+            height: 100%;
+            border-radius: 2px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 1s ease;
+        }
+
+        /* ── Проекты ── */
+        .projects-section {
+            padding: 5rem 0;
+        }
+        .projects-section h2 {
+            text-align: center;
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            background: linear-gradient(135deg, #fff, var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        .project-card {
+            background: linear-gradient(135deg, rgba(26,31,58,0.9), rgba(45,55,72,0.9));
+            border: 1px solid rgba(0,212,255,0.15);
+            border-radius: 1rem;
+            padding: 2rem;
+            transition: all 0.3s;
+        }
+        .project-card:hover {
+            border-color: rgba(0,212,255,0.4);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,212,255,0.1);
+        }
+        .project-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .project-icon {
+            font-size: 2rem;
+            width: 56px;
+            height: 56px;
+            background: rgba(0,212,255,0.1);
+            border-radius: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .project-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .project-type {
+            font-size: 0.8rem;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        .project-desc {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            line-height: 1.6;
+            margin-bottom: 1.2rem;
+        }
+        .project-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .tag {
+            background: rgba(0,212,255,0.1);
+            border: 1px solid rgba(0,212,255,0.2);
+            color: var(--primary-color);
+            font-size: 0.75rem;
+            padding: 0.2rem 0.7rem;
+            border-radius: 2rem;
+            font-weight: 600;
+        }
+
+        /* ── Контакты ── */
+        .contact-section {
+            padding: 5rem 0;
+            text-align: center;
+        }
+        .contact-section h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #fff, var(--primary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .contact-section p {
+            color: var(--text-light);
+            margin-bottom: 2rem;
+        }
+        .contact-links {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 0.7rem;
+            background: linear-gradient(135deg, rgba(26,31,58,0.9), rgba(45,55,72,0.9));
+            border: 1px solid rgba(0,212,255,0.2);
+            border-radius: 0.8rem;
+            padding: 1rem 1.5rem;
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        .contact-link:hover {
+            border-color: rgba(0,212,255,0.5);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,212,255,0.15);
+            color: var(--primary-color);
+        }
+
+        /* ── Языки ── */
+        .langs {
+            display: flex;
+            gap: 0.7rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        .lang-badge {
+            background: rgba(0,212,255,0.1);
+            border: 1px solid rgba(0,212,255,0.2);
+            color: var(--primary-color);
+            font-size: 0.8rem;
+            padding: 0.3rem 0.9rem;
+            border-radius: 2rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 600px) {
+            .hero-name { font-size: 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="container">
+            <div class="logo">Denis.dev</div>
+            <ul class="nav-links">
+                <li><a href="#skills">Навыки</a></li>
+                <li><a href="#projects">Проекты</a></li>
+                <li><a href="#contact">Контакты</a></li>
+                <li><a href="index.html">MorphVPN</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Герой -->
+    <section class="portfolio-hero">
+        <div class="container">
+            <div class="avatar">👨‍💻</div>
+            <div class="status-dot"><span></span> Открыт для проектов</div>
+            <h1 class="hero-name">Denis</h1>
+            <div class="hero-title">Full-Stack Developer</div>
+            <div class="langs">
+                <span class="lang-badge">🇷🇺 Русский</span>
+                <span class="lang-badge">🇬🇧 English</span>
+            </div>
+            <p class="hero-desc">
+                Разрабатываю сайты, боты и сервисы. Люблю чистый код и красивые интерфейсы. Создал MorphVPN — VPN сервис с тысячами пользователей.
+            </p>
+            <div class="hero-btns">
+                <a href="#projects" class="btn btn-primary">Мои проекты</a>
+                <a href="https://t.me/slogg12" class="btn btn-secondary" target="_blank">Написать в Telegram</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Навыки -->
+    <section id="skills" class="skills-section">
+        <div class="container">
+            <h2>Технологии</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">🐍</div>
+                    <div class="skill-name">Python</div>
+                    <div class="skill-level">Продвинутый</div>
+                    <div class="skill-bar-wrap"><div class="skill-bar" style="width:85%"></div></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">⚡</div>
+                    <div class="skill-name">JavaScript</div>
+                    <div class="skill-level">Продвинутый</div>
+                    <div class="skill-bar-wrap"><div class="skill-bar" style="width:80%"></div></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">⚙️</div>
+                    <div class="skill-name">C++</div>
+                    <div class="skill-level">Средний</div>
+                    <div class="skill-bar-wrap"><div class="skill-bar" style="width:60%"></div></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🌐</div>
+                    <div class="skill-name">HTML / CSS</div>
+                    <div class="skill-level">Продвинутый</div>
+                    <div class="skill-bar-wrap"><div class="skill-bar" style="width:90%"></div></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🗄️</div>
+                    <div class="skill-name">PostgreSQL</div>
+                    <div class="skill-level">Средний</div>
+                    <div class="skill-bar-wrap"><div class="skill-bar" style="width:65%"></div></div>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🐧</div>
+                    <div class="skill-name">Linux / VPS</div>
+                    <div class="skill-level">Средний</div>
+                    <div class="skill-bar-wrap"><div class="skill-bar" style="width:70%"></div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Проекты -->
+    <section id="projects" class="projects-section">
+        <div class="container">
+            <h2>Проекты</h2>
+            <div class="projects-grid">
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-icon">🔒</div>
+                        <div>
+                            <div class="project-title">MorphVPN</div>
+                            <div class="project-type">VPN Сервис</div>
+                        </div>
+                    </div>
+                    <p class="project-desc">
+                        Полноценный VPN сервис с сайтом, Telegram ботом, панелью управления и автоматической выдачей подписок. Серверы в 10+ странах.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">Node.js</span>
+                        <span class="tag">PostgreSQL</span>
+                        <span class="tag">3X-UI</span>
+                        <span class="tag">Railway</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-icon">🤖</div>
+                        <div>
+                            <div class="project-title">Telegram Боты</div>
+                            <div class="project-type">Автоматизация</div>
+                        </div>
+                    </div>
+                    <p class="project-desc">
+                        Разработка Telegram ботов для бизнеса: приём платежей, управление подписками, рассылки, статистика и админ-панели.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">Python</span>
+                        <span class="tag">python-telegram-bot</span>
+                        <span class="tag">PostgreSQL</span>
+                    </div>
+                </div>
+
+                <div class="project-card">
+                    <div class="project-header">
+                        <div class="project-icon">🌍</div>
+                        <div>
+                            <div class="project-title">Веб-сайты</div>
+                            <div class="project-type">Frontend / Backend</div>
+                        </div>
+                    </div>
+                    <p class="project-desc">
+                        Создание современных сайтов с красивым дизайном, адаптивной вёрсткой, REST API и интеграцией с базами данных.
+                    </p>
+                    <div class="project-tags">
+                        <span class="tag">HTML/CSS</span>
+                        <span class="tag">JavaScript</span>
+                        <span class="tag">Node.js</span>
+                        <span class="tag">Express</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Контакты -->
+    <section id="contact" class="contact-section">
+        <div class="container">
+            <h2>Связаться со мной</h2>
+            <p>Есть проект? Напиши — обсудим детали</p>
+            <div class="contact-links">
+                <a href="https://t.me/slogg12" class="contact-link" target="_blank">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
+                        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.328-.373-.115l-6.869 4.332-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.461c.54-.203 1.01.122.84.951z"/>
+                    </svg>
+                    @slogg12
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2026 Denis. Full-Stack Developer</p>
+            <div class="footer-links">
+                <a href="index.html">MorphVPN</a>
+                <a href="https://t.me/slogg12" target="_blank">Telegram</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Кнопка Telegram -->
+    <a href="https://t.me/slogg12" class="telegram-support" target="_blank" title="Написать в Telegram">
+        <span class="support-text">Написать</span>
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.328-.373-.115l-6.869 4.332-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.461c.54-.203 1.01.122.84.951z"/>
+        </svg>
+    </a>
+
+    <script src="script.js"></script>
+</body>
+</html>
