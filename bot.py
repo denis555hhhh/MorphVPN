@@ -19,7 +19,8 @@ TOKEN = os.getenv("TOKEN", "8753394596:AAEA67fhil5B_R9iP-j5M5ZnIoOjhkykxDA")
 # URL базы данных PostgreSQL (Railway автоматически добавляет DATABASE_URL)
 DATABASE_URL = os.getenv("DATABASE_URL")
 
-# Тарифы
+# QR код СБП для оплаты
+QR_FILE_ID = "AgACAgIAAxkBAAFLCEFqGrtrg4MB1kNbedVTpwawTFWYhgACfRxrG76y0UjuwekbsyxkGQEAAwIAA20AAzsE"
 PLANS = {
     "basic": {
         "name": "Базовый",
@@ -300,6 +301,7 @@ async def buy_plan(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
 """
     keyboard = [
         [InlineKeyboardButton(f"💳 Оплатить {plan['price']}₽", url=plan['yoomoney'])],
+        [InlineKeyboardButton("📱 Оплатить через QR (СБП)", callback_data=f"qr_{plan_id}")],
         [InlineKeyboardButton("✅ Я оплатил", callback_data=f"paid_{plan_id}")],
         [InlineKeyboardButton("📞 Поддержка", url="https://t.me/slogg12")],
         [InlineKeyboardButton("◀️ Главное меню", callback_data="back_to_menu")]
@@ -308,7 +310,32 @@ async def buy_plan(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     logger.info(f"User {user.id} ({user.first_name}) selected plan: {plan_id}")
 
 
-async def paid_plan(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def show_qr(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    plan_id = query.data.split("_")[1]
+    plan = PLANS.get(plan_id, {})
+    price = plan.get('price', '')
+    await query.answer()
+    await query.message.reply_photo(
+        photo=QR_FILE_ID,
+        caption=(
+            f"📱 *QR код для оплаты через СБП*\n\n"
+            f"💰 Сумма к оплате: *{price}₽*\n\n"
+            f"1️⃣ Отсканируй QR камерой телефона\n"
+            f"2️⃣ Введи сумму *{price}* рублей\n"
+            f"3️⃣ Подтверди платёж\n"
+            f"4️⃣ Нажми кнопку ✅ Я оплатил в боте\n\n"
+            f"❓ Вопросы? @slogg12"
+        ),
+        parse_mode='Markdown',
+        reply_markup=InlineKeyboardMarkup([
+            [InlineKeyboardButton("✅ Я оплатил", callback_data=f"paid_{plan_id}")],
+            [InlineKeyboardButton("◀️ Назад", callback_data=f"buy_{plan_id}")]
+        ])
+    )
+
+
+
     query = update.callback_query
     plan_id = query.data.split("_")[1]
     if plan_id not in PLANS:
@@ -493,6 +520,7 @@ def main() -> None:
     application.add_handler(CallbackQueryHandler(show_plans, pattern="^show_plans$"))
     application.add_handler(CallbackQueryHandler(select_plan, pattern="^select_"))
     application.add_handler(CallbackQueryHandler(buy_plan, pattern="^buy_"))
+    application.add_handler(CallbackQueryHandler(show_qr, pattern="^qr_"))
     application.add_handler(CallbackQueryHandler(paid_plan, pattern="^paid_"))
     application.add_handler(CallbackQueryHandler(about, pattern="^about$"))
     application.add_handler(CallbackQueryHandler(faq, pattern="^faq$"))
