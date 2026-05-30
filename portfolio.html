@@ -144,10 +144,15 @@
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            transition: opacity 0.2s;
             font-family: 'Courier New', monospace;
+            animation: float-btn 3s ease-in-out infinite;
+            transition: opacity 0.2s, box-shadow 0.2s;
+            box-shadow: 0 4px 20px rgba(255,255,255,0.1);
         }
-        .btn-main:hover { opacity: 0.85; }
+        .btn-main:hover {
+            opacity: 0.9;
+            box-shadow: 0 8px 30px rgba(255,255,255,0.2);
+        }
         .btn-outline {
             background: transparent;
             color: var(--text-muted);
@@ -158,12 +163,19 @@
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            transition: all 0.2s;
             font-family: 'Courier New', monospace;
+            animation: float-btn 3s ease-in-out infinite;
+            animation-delay: 0.4s;
+            transition: all 0.2s;
         }
         .btn-outline:hover {
             color: var(--text);
             border-color: var(--text-muted);
+            box-shadow: 0 8px 30px rgba(255,255,255,0.05);
+        }
+        @keyframes float-btn {
+            0%, 100% { transform: translateY(0px); }
+            50%       { transform: translateY(-6px); }
         }
 
         /* ── Секции ── */
@@ -367,7 +379,9 @@
             50% { opacity: 0.4; }
         }
 
-        @media (max-width: 640px) {
+        .contact-block a.btn-main {
+            animation-delay: 0s;
+        }
             .about-grid { grid-template-columns: 1fr; gap: 2rem; }
             .project-item { grid-template-columns: 1fr; }
             .project-arrow { display: none; }
