@@ -4,18 +4,22 @@
     box-sizing: border-box;
 }
 
-html {
-    scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 :root {
-    --primary-color: #00d4ff;
-    --secondary-color: #ff006e;
-    --dark-bg: #0a0e27;
-    --light-bg: #1a1f3a;
-    --text-dark: #e0e6ff;
-    --text-light: #a0aec0;
-    --border-color: #2d3748;
+    --primary-color: #a855f7;
+    --primary-bright: #c084fc;
+    --primary-dim: #7c3aed;
+    --secondary-color: #ec4899;
+    --dark-bg: #07050f;
+    --card-bg: rgba(20, 12, 35, 0.85);
+    --card-bg2: rgba(30, 18, 50, 0.9);
+    --border-color: rgba(168, 85, 247, 0.15);
+    --border-hover: rgba(168, 85, 247, 0.45);
+    --text-dark: #f0e8ff;
+    --text-light: #9d8ab5;
+    --glow: rgba(168, 85, 247, 0.35);
+    --glow-strong: rgba(168, 85, 247, 0.6);
 }
 
 body {
@@ -23,38 +27,32 @@ body {
     line-height: 1.6;
     color: var(--text-dark);
     background-color: var(--dark-bg);
-    background-image: 
-        radial-gradient(2px 2px at 20px 30px, #eee, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 60px 70px, #fff, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 50px 50px, #fff, rgba(0,0,0,0)),
-        radial-gradient(1px 1px at 130px 80px, #fff, rgba(0,0,0,0)),
-        radial-gradient(2px 2px at 90px 10px, #fff, rgba(0,0,0,0));
+    background-image:
+        radial-gradient(1px 1px at 15px 25px, rgba(168,85,247,0.4), transparent),
+        radial-gradient(1px 1px at 55px 65px, rgba(192,132,252,0.3), transparent),
+        radial-gradient(1px 1px at 95px 15px, rgba(168,85,247,0.2), transparent),
+        radial-gradient(1px 1px at 135px 85px, rgba(236,72,153,0.2), transparent),
+        radial-gradient(1px 1px at 175px 45px, rgba(168,85,247,0.3), transparent);
     background-repeat: repeat;
     background-size: 200px 200px;
     background-attachment: fixed;
-    position: relative;
-    animation: starfield 20s linear infinite;
+    animation: starfield 25s linear infinite;
 }
 
 @keyframes starfield {
-    0% {
-        background-position: 0 0;
-    }
-    100% {
-        background-position: 200px 200px;
-    }
+    0%   { background-position: 0 0; }
+    100% { background-position: 200px 200px; }
 }
 
 body::before {
     content: '';
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: 
-        radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 80%, rgba(255, 0, 110, 0.1) 0%, transparent 50%);
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background:
+        radial-gradient(ellipse at 15% 40%, rgba(124,58,237,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 70%, rgba(236,72,153,0.08) 0%, transparent 50%),
+        radial-gradient(ellipse at 50% 0%,   rgba(168,85,247,0.1) 0%, transparent 60%);
     pointer-events: none;
     z-index: 1;
 }
@@ -67,15 +65,15 @@ body::before {
     z-index: 2;
 }
 
-/* Навигация */
+/* ── Навигация ── */
 .navbar {
-    background: rgba(10, 14, 39, 0.8);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 32px rgba(0, 212, 255, 0.1);
+    background: rgba(7, 5, 15, 0.85);
+    backdrop-filter: blur(16px);
     position: sticky;
     top: 0;
     z-index: 100;
-    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 4px 30px rgba(124,58,237,0.08);
 }
 
 .navbar .container {
@@ -87,9 +85,13 @@ body::before {
 
 .logo {
     font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--primary-color);
-    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    font-weight: 800;
+    background: linear-gradient(135deg, var(--primary-bright), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 0 8px rgba(168,85,247,0.5));
+    letter-spacing: -0.02em;
 }
 
 .nav-links {
@@ -103,151 +105,148 @@ body::before {
     color: var(--text-light);
     transition: all 0.3s;
     position: relative;
+    font-size: 0.95rem;
 }
 
 .nav-links a::after {
     content: '';
     position: absolute;
-    bottom: -5px;
+    bottom: -4px;
     left: 0;
     width: 0;
     height: 2px;
     background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
     transition: width 0.3s;
+    border-radius: 2px;
 }
 
 .nav-links a:hover {
-    color: var(--primary-color);
+    color: var(--primary-bright);
+    text-shadow: 0 0 12px rgba(168,85,247,0.6);
 }
 
-.nav-links a:hover::after {
-    width: 100%;
-}
+.nav-links a:hover::after { width: 100%; }
 
-/* Кнопки */
+/* ── Кнопки ── */
 .btn {
-    padding: 1rem 2.5rem;
+    padding: 0.9rem 2.2rem;
     border: none;
-    border-radius: 0.5rem;
-    font-size: 1.1rem;
+    border-radius: 0.6rem;
+    font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s;
     font-weight: 600;
     position: relative;
     overflow: hidden;
+    display: inline-block;
+    text-align: center;
+    text-decoration: none;
 }
 
 .btn::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    top: 0; left: -100%;
+    width: 100%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
     transition: left 0.5s;
 }
 
-.btn:hover::before {
-    left: 100%;
-}
+.btn:hover::before { left: 100%; }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: var(--dark-bg);
-    border: 2px solid transparent;
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+    background: linear-gradient(135deg, var(--primary-dim), var(--primary-color));
+    color: #fff;
+    box-shadow: 0 0 20px rgba(168,85,247,0.4), inset 0 1px 0 rgba(255,255,255,0.1);
 }
 
 .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba(0, 212, 255, 0.6);
+    box-shadow: 0 0 35px rgba(168,85,247,0.7), 0 8px 25px rgba(124,58,237,0.4);
 }
 
 .btn-secondary {
     background: transparent;
-    color: var(--primary-color);
-    border: 2px solid var(--primary-color);
-    box-shadow: 0 0 10px rgba(0, 212, 255, 0.2);
+    color: var(--primary-bright);
+    border: 1.5px solid rgba(168,85,247,0.5);
+    box-shadow: 0 0 12px rgba(168,85,247,0.1);
 }
 
 .btn-secondary:hover {
-    background: rgba(0, 212, 255, 0.1);
-    box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+    background: rgba(168,85,247,0.1);
+    border-color: var(--primary-color);
+    box-shadow: 0 0 25px rgba(168,85,247,0.35);
+    transform: translateY(-2px);
 }
 
-/* Герой секция */
+/* ── Герой ── */
 .hero {
-    background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 0, 110, 0.1));
-    color: var(--text-dark);
-    padding: 6rem 0;
+    padding: 7rem 0 6rem;
     text-align: center;
-    border-bottom: 1px solid rgba(0, 212, 255, 0.2);
     position: relative;
     overflow: hidden;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .hero::before {
     content: '';
     position: absolute;
-    top: -50%;
-    right: -10%;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(0, 212, 255, 0.1) 0%, transparent 70%);
+    top: -30%;
+    right: -5%;
+    width: 550px; height: 550px;
+    background: radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 65%);
     border-radius: 50%;
-    animation: float 6s ease-in-out infinite;
+    animation: float 7s ease-in-out infinite;
 }
 
 .hero::after {
     content: '';
     position: absolute;
-    bottom: -50%;
-    left: -10%;
-    width: 500px;
-    height: 500px;
-    background: radial-gradient(circle, rgba(255, 0, 110, 0.1) 0%, transparent 70%);
+    bottom: -40%;
+    left: -5%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(236,72,153,0.08) 0%, transparent 65%);
     border-radius: 50%;
-    animation: float 8s ease-in-out infinite reverse;
+    animation: float 9s ease-in-out infinite reverse;
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(30px); }
+    0%, 100% { transform: translateY(0); }
+    50%       { transform: translateY(28px); }
 }
 
 .hero h1 {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    font-weight: 800;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    font-size: 3.2rem;
+    font-weight: 900;
+    margin-bottom: 1.2rem;
+    background: linear-gradient(135deg, #fff 20%, var(--primary-bright) 60%, var(--secondary-color));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
     position: relative;
     z-index: 2;
+    letter-spacing: -0.02em;
 }
 
 .hero p {
-    font-size: 1.25rem;
-    margin-bottom: 2rem;
-    opacity: 0.9;
+    font-size: 1.2rem;
+    margin-bottom: 2.5rem;
+    color: var(--text-light);
     position: relative;
     z-index: 2;
 }
 
-/* Возможности */
-.features {
-    padding: 4rem 0;
-    background: var(--dark-bg);
-}
+/* ── Возможности ── */
+.features { padding: 5rem 0; }
 
-.features h2 {
+.features h2,
+.pricing h2,
+.faq h2 {
     text-align: center;
-    font-size: 2.5rem;
+    font-size: 2.3rem;
+    font-weight: 800;
     margin-bottom: 3rem;
-    color: var(--text-dark);
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    background: linear-gradient(135deg, #fff, var(--primary-bright));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -255,133 +254,120 @@ body::before {
 
 .features-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
 }
 
 .feature-card {
-    background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(45, 55, 72, 0.8));
+    background: var(--card-bg);
     padding: 2rem;
     border-radius: 1rem;
     text-align: center;
-    box-shadow: 0 8px 32px rgba(0, 212, 255, 0.1);
-    border: 1px solid rgba(0, 212, 255, 0.2);
+    border: 1px solid var(--border-color);
     transition: all 0.3s;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
 }
 
 .feature-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 212, 255, 0.3);
-    border-color: rgba(0, 212, 255, 0.5);
+    transform: translateY(-6px);
+    border-color: var(--border-hover);
+    box-shadow: 0 12px 40px rgba(168,85,247,0.2), 0 0 0 1px rgba(168,85,247,0.1);
 }
 
-.feature-icon {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-}
+.feature-icon { font-size: 2.8rem; margin-bottom: 1rem; }
 
 .feature-card h3 {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
     margin-bottom: 0.5rem;
-    color: var(--primary-color);
+    color: var(--primary-bright);
 }
 
-.feature-card p {
-    color: var(--text-light);
-}
+.feature-card p { color: var(--text-light); font-size: 0.95rem; }
 
-/* Тарифы */
-.pricing {
-    padding: 4rem 0;
-    background: var(--dark-bg);
-}
-
-.pricing h2 {
-    text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 3rem;
-    color: var(--text-dark);
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
+/* ── Тарифы ── */
+.pricing { padding: 5rem 0; }
 
 .pricing-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
 }
 
 .pricing-card {
-    background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(45, 55, 72, 0.8));
-    border: 2px solid rgba(0, 212, 255, 0.2);
+    background: var(--card-bg);
+    border: 1.5px solid var(--border-color);
     border-radius: 1rem;
-    padding: 2rem;
+    padding: 2.2rem;
     text-align: center;
     transition: all 0.3s;
     position: relative;
-    backdrop-filter: blur(10px);
+    backdrop-filter: blur(12px);
 }
 
 .pricing-card:hover {
-    box-shadow: 0 15px 40px rgba(0, 212, 255, 0.3);
-    border-color: rgba(0, 212, 255, 0.5);
+    border-color: var(--border-hover);
+    box-shadow: 0 12px 40px rgba(168,85,247,0.2);
+    transform: translateY(-4px);
 }
 
 .pricing-card.featured {
     border-color: var(--primary-color);
-    box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
-    transform: scale(1.05);
+    box-shadow: 0 0 35px rgba(168,85,247,0.3), inset 0 0 40px rgba(168,85,247,0.04);
+    transform: scale(1.04);
+}
+
+.pricing-card.featured:hover {
+    box-shadow: 0 0 50px rgba(168,85,247,0.5);
+    transform: scale(1.04) translateY(-4px);
 }
 
 .badge {
     position: absolute;
-    top: -12px;
+    top: -13px;
     left: 50%;
     transform: translateX(-50%);
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    color: var(--dark-bg);
-    padding: 0.5rem 1rem;
+    background: linear-gradient(135deg, var(--primary-dim), var(--secondary-color));
+    color: #fff;
+    padding: 0.35rem 1.1rem;
     border-radius: 2rem;
-    font-size: 0.875rem;
-    font-weight: 600;
-    box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    box-shadow: 0 4px 15px rgba(168,85,247,0.4);
 }
 
 .pricing-card h3 {
-    font-size: 1.5rem;
+    font-size: 1.4rem;
     margin-bottom: 1rem;
-    color: var(--primary-color);
+    color: var(--primary-bright);
+    font-weight: 700;
 }
 
-.price {
-    margin: 1.5rem 0;
-}
+.price { margin: 1.5rem 0; }
 
 .amount {
-    font-size: 2.5rem;
-    font-weight: 800;
-    color: var(--primary-color);
-    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    font-size: 2.8rem;
+    font-weight: 900;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(168,85,247,0.6);
 }
 
 .currency {
     font-size: 1rem;
     color: var(--text-light);
-    margin-left: 0.5rem;
+    margin-left: 0.3rem;
 }
 
 .discount {
-    background: rgba(255, 0, 110, 0.2);
-    color: var(--secondary-color);
-    padding: 0.5rem;
+    background: rgba(236,72,153,0.12);
+    color: #f472b6;
+    padding: 0.4rem 0.8rem;
     border-radius: 0.5rem;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     font-weight: 600;
-    margin: 1rem 0;
-    border: 1px solid rgba(255, 0, 110, 0.3);
+    margin: 0.8rem 0;
+    border: 1px solid rgba(236,72,153,0.25);
+    display: inline-block;
 }
 
 .features-list {
@@ -391,131 +377,61 @@ body::before {
 }
 
 .features-list li {
-    padding: 0.5rem 0;
+    padding: 0.45rem 0;
     color: var(--text-light);
+    font-size: 0.95rem;
+    border-bottom: 1px solid rgba(168,85,247,0.06);
 }
+
+.features-list li:last-child { border-bottom: none; }
 
 .pricing-card .btn {
     width: 100%;
-    margin-top: 1rem;
-    display: block;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
+    margin-top: 1.2rem;
     box-sizing: border-box;
 }
 
-/* FAQ */
-.faq {
-    padding: 4rem 0;
-    background: var(--dark-bg);
-}
-
-.faq h2 {
-    text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 3rem;
-    color: var(--text-dark);
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
+/* ── FAQ ── */
+.faq { padding: 5rem 0; }
 
 .faq-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
 }
 
 .faq-item {
-    background: linear-gradient(135deg, rgba(26, 31, 58, 0.8), rgba(45, 55, 72, 0.8));
-    padding: 1.5rem;
+    background: var(--card-bg);
+    padding: 1.6rem;
     border-radius: 1rem;
-    box-shadow: 0 8px 32px rgba(0, 212, 255, 0.1);
-    border: 1px solid rgba(0, 212, 255, 0.2);
-    backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(12px);
     transition: all 0.3s;
 }
 
 .faq-item:hover {
-    border-color: rgba(0, 212, 255, 0.5);
-    box-shadow: 0 12px 40px rgba(0, 212, 255, 0.2);
+    border-color: var(--border-hover);
+    box-shadow: 0 8px 30px rgba(168,85,247,0.15);
 }
 
 .faq-item h4 {
-    color: var(--primary-color);
-    margin-bottom: 0.5rem;
-    font-size: 1.1rem;
+    color: var(--primary-bright);
+    margin-bottom: 0.6rem;
+    font-size: 1.05rem;
 }
 
 .faq-item p {
     color: var(--text-light);
     line-height: 1.8;
+    font-size: 0.93rem;
 }
 
-/* Контакты */
-.contact {
-    padding: 4rem 0;
-    background: white;
-}
-
-.contact h2 {
-    text-align: center;
-    font-size: 2.5rem;
-    margin-bottom: 3rem;
-    color: var(--text-dark);
-}
-
-.contact-content {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 3rem;
-}
-
-.contact-info h3 {
-    color: var(--primary-color);
-    margin-bottom: 1rem;
-}
-
-.contact-info p {
-    margin-bottom: 1rem;
-    color: var(--text-light);
-}
-
-.contact-form {
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-}
-
-.contact-form input,
-.contact-form textarea {
-    padding: 0.75rem;
-    border: 2px solid var(--border-color);
-    border-radius: 0.5rem;
-    font-family: inherit;
-    font-size: 1rem;
-    transition: border-color 0.3s;
-}
-
-.contact-form input:focus,
-.contact-form textarea:focus {
-    outline: none;
-    border-color: var(--primary-color);
-}
-
-.contact-form .btn {
-    width: 100%;
-}
-
-/* Футер */
+/* ── Футер ── */
 .footer {
-    background: rgba(10, 14, 39, 0.9);
+    background: rgba(7, 5, 15, 0.95);
     color: var(--text-light);
     padding: 2rem 0;
-    text-align: center;
-    border-top: 1px solid rgba(0, 212, 255, 0.2);
+    border-top: 1px solid var(--border-color);
 }
 
 .footer .container {
@@ -535,125 +451,59 @@ body::before {
     color: var(--text-light);
     text-decoration: none;
     transition: all 0.3s;
+    font-size: 0.9rem;
 }
 
 .footer-links a:hover {
-    color: var(--primary-color);
-    text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    color: var(--primary-bright);
+    text-shadow: 0 0 10px rgba(168,85,247,0.5);
 }
 
+/* ── Telegram кнопка ── */
 .telegram-support {
     position: fixed;
-    bottom: 30px;
-    right: 30px;
-    width: 160px;
-    height: 60px;
-    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    bottom: 28px;
+    right: 28px;
+    height: 56px;
+    padding: 0 20px;
+    background: linear-gradient(135deg, var(--primary-dim), var(--primary-color));
     border-radius: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--dark-bg);
-    text-decoration: none;
-    box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
-    transition: all 0.3s ease;
-    z-index: 999;
-    border: 2px solid rgba(0, 212, 255, 0.3);
     gap: 10px;
-    padding: 0 15px;
-    font-weight: 600;
+    color: #fff;
+    text-decoration: none;
+    font-weight: 700;
     font-size: 0.9rem;
+    box-shadow: 0 0 25px rgba(168,85,247,0.5), 0 4px 20px rgba(124,58,237,0.4);
+    transition: all 0.3s;
+    z-index: 999;
     white-space: nowrap;
-}
-
-.telegram-support .support-text {
-    opacity: 1;
-    width: auto;
+    border: 1px solid rgba(192,132,252,0.3);
 }
 
 .telegram-support:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 40px rgba(0, 212, 255, 0.6);
+    transform: scale(1.06) translateY(-2px);
+    box-shadow: 0 0 40px rgba(168,85,247,0.7), 0 8px 30px rgba(124,58,237,0.5);
 }
 
-.telegram-support:active {
-    transform: scale(0.95);
-}
+.telegram-support:active { transform: scale(0.97); }
 
-/* Адаптивность */
+/* ── Адаптивность ── */
 @media (max-width: 768px) {
-    .nav-links {
-        gap: 1rem;
-        font-size: 0.9rem;
-    }
-
-    .hero h1 {
-        font-size: 2rem;
-    }
-
-    .hero p {
-        font-size: 1rem;
-    }
-
-    .features h2,
-    .pricing h2,
-    .faq h2,
-    .contact h2 {
-        font-size: 1.8rem;
-    }
-
-    .pricing-card.featured {
-        transform: scale(1);
-    }
-
-    .contact-content {
-        grid-template-columns: 1fr;
-    }
-
-    .footer .container {
-        flex-direction: column;
-    }
-
-    .footer-links {
-        flex-direction: column;
-        gap: 1rem;
-    }
+    .nav-links { gap: 1rem; font-size: 0.9rem; }
+    .hero h1 { font-size: 2.2rem; }
+    .hero p { font-size: 1rem; }
+    .pricing-card.featured { transform: scale(1); }
+    .footer .container { flex-direction: column; text-align: center; }
+    .footer-links { flex-direction: column; gap: 0.8rem; }
 }
 
 @media (max-width: 480px) {
-    .nav-links {
-        gap: 0.5rem;
-        font-size: 0.8rem;
-    }
-
-    .hero {
-        padding: 3rem 0;
-    }
-
-    .hero h1 {
-        font-size: 1.5rem;
-    }
-
-    .features h2,
-    .pricing h2,
-    .faq h2,
-    .contact h2 {
-        font-size: 1.5rem;
-    }
-
-    .amount {
-        font-size: 2rem;
-    }
-
-    .telegram-support {
-        bottom: 20px;
-        right: 20px;
-        width: 50px;
-        height: 50px;
-    }
-
-    .telegram-support svg {
-        width: 20px;
-        height: 20px;
-    }
+    .nav-links { gap: 0.6rem; font-size: 0.8rem; }
+    .hero { padding: 4rem 0 3rem; }
+    .hero h1 { font-size: 1.7rem; }
+    .amount { font-size: 2.2rem; }
+    .telegram-support { bottom: 18px; right: 18px; height: 50px; font-size: 0.82rem; }
 }
