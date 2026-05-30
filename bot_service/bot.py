@@ -342,7 +342,7 @@ async def get_photo_id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         await update.message.reply_text(f"file_id:\n`{file_id}`", parse_mode='Markdown')
 
 
-
+async def paid_plan(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     plan_id = query.data.split("_")[1]
     if plan_id not in PLANS:
