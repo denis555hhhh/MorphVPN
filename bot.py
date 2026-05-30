@@ -335,7 +335,7 @@ async def show_qr(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
 
-
+async def paid_plan(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     plan_id = query.data.split("_")[1]
     if plan_id not in PLANS:
