@@ -20,7 +20,7 @@ TOKEN = os.getenv("TOKEN", "8753394596:AAEA67fhil5B_R9iP-j5M5ZnIoOjhkykxDA")
 DATABASE_URL = os.getenv("DATABASE_URL")
 
 # QR код СБП для оплаты
-QR_FILE_ID = "AgACAgIAAxkBAAFLCEFqGrtrg4MB1kNbedVTpwawTFWYhgACfRxrG76y0UjuwekbsyxkGQEAAwIAA20AAzsE"
+QR_FILE_ID = "AgACAgIAAxkBAAN5ahrI1UtWCCO2JQj0FYSe8AK173kAAn0caxu-stFIZvA1BzCfVxkBAAMCAANtAAM7BA"
 PLANS = {
     "basic": {
         "name": "Базовый",
@@ -522,7 +522,6 @@ def main() -> None:
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("plans", plans_command))
     application.add_handler(CommandHandler("stats", stats_command))
-    application.add_handler(MessageHandler(filters.PHOTO, get_photo_id))
 
     # Кнопки
     application.add_handler(CallbackQueryHandler(show_plans, pattern="^show_plans$"))
