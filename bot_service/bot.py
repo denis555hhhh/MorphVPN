@@ -4,7 +4,7 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 from datetime import datetime
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes
+from telegram.ext import Application, CommandHandler, CallbackQueryHandler, ContextTypes, MessageHandler, filters
 
 # Логирование
 logging.basicConfig(
@@ -335,7 +335,14 @@ async def show_qr(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     )
 
 
-async def paid_plan(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+async def get_photo_id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """Временный обработчик для получения file_id фото"""
+    if update.message.photo:
+        file_id = update.message.photo[-1].file_id
+        await update.message.reply_text(f"file_id:\n`{file_id}`", parse_mode='Markdown')
+
+
+
     query = update.callback_query
     plan_id = query.data.split("_")[1]
     if plan_id not in PLANS:
@@ -515,6 +522,7 @@ def main() -> None:
     application.add_handler(CommandHandler("help", help_command))
     application.add_handler(CommandHandler("plans", plans_command))
     application.add_handler(CommandHandler("stats", stats_command))
+    application.add_handler(MessageHandler(filters.PHOTO, get_photo_id))
 
     # Кнопки
     application.add_handler(CallbackQueryHandler(show_plans, pattern="^show_plans$"))
