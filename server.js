@@ -62,9 +62,7 @@ app.use(async (req, res, next) => {
 const XUI_SERVERS = (process.env.XUI_SERVERS
     ? JSON.parse(process.env.XUI_SERVERS)
     : [
-        { host: '192.124.181.38', port: '2096', path: '/sub' }
-        // Пример второго сервера:
-        // { host: '1.2.3.4', port: '2096', path: '/sub' }
+        { host: '192.124.181.38', port: '8080', path: '/sub' }
     ]
 );
 
