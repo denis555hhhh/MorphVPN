@@ -127,6 +127,23 @@ app.get('/api/vpn/servers', (req, res) => {
 });
 
 
+// ── Прокси подписки Marzban (/sub/:token) ────────────────────────────────────
+app.get('/sub/:token', (req, res) => {
+    const { token } = req.params;
+    const url = `http://192.124.181.38:8080/sub/${token}`;
+
+    http.get(url, (proxyRes) => {
+        const headers = { ...proxyRes.headers };
+        headers['profile-title'] = 'base64:' + Buffer.from('MorphVPN').toString('base64');
+        headers['content-type'] = 'text/plain; charset=utf-8';
+        res.writeHead(proxyRes.statusCode, headers);
+        proxyRes.pipe(res);
+    }).on('error', (e) => {
+        console.error('Marzban proxy error:', e.message);
+        res.status(502).send('VPN server unavailable');
+    });
+});
+
 app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 app.get('/privacy', (req, res) => res.sendFile(path.join(__dirname, 'privacy.html')));
 app.get('/terms', (req, res) => res.sendFile(path.join(__dirname, 'terms.html')));
