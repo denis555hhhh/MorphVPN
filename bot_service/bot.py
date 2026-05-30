@@ -384,7 +384,10 @@ async def paid_plan(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         [InlineKeyboardButton("📞 Написать в поддержку", url="https://t.me/slogg12")],
         [InlineKeyboardButton("◀️ Главное меню", callback_data="back_to_menu")]
     ]
-    await query.edit_message_text(text=text, reply_markup=InlineKeyboardMarkup(keyboard))
+    try:
+        await query.edit_message_text(text=text, reply_markup=InlineKeyboardMarkup(keyboard))
+    except Exception:
+        await query.message.reply_text(text=text, reply_markup=InlineKeyboardMarkup(keyboard))
     logger.info(f"User {user.id} ({user.first_name}) paid for plan: {plan_id}")
 
 
