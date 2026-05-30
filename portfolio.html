@@ -3,490 +3,557 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Denis — Developer Portfolio</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Denis — Developer</title>
     <style>
-        /* ── Портфолио стили ── */
-        .portfolio-hero {
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #0a0a0a;
+            --bg2: #111111;
+            --bg3: #1a1a1a;
+            --border: #222222;
+            --border-hover: #333333;
+            --text: #e8e8e8;
+            --text-muted: #666666;
+            --text-dim: #444444;
+            --accent: #ffffff;
+            --green: #4ade80;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Courier New', monospace;
+            line-height: 1.6;
+            cursor: default;
+        }
+
+        /* ── Навигация ── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: rgba(10,10,10,0.95);
+            backdrop-filter: blur(10px);
+        }
+        .nav-logo {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            letter-spacing: 0.1em;
+        }
+        .nav-logo span { color: var(--text); }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover { color: var(--text); }
+
+        /* ── Герой ── */
+        .hero {
             min-height: 100vh;
             display: flex;
             align-items: center;
-            justify-content: center;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+            padding: 0 2rem;
+            max-width: 900px;
+            margin: 0 auto;
         }
-        .portfolio-hero::before {
-            content: '';
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            pointer-events: none;
+        .hero-inner { width: 100%; }
+        .hero-greeting {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.1em;
         }
-        .avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            margin: 0 auto 1.5rem;
-            box-shadow: 0 0 40px rgba(0,212,255,0.3);
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        .hero-greeting span {
+            color: var(--green);
         }
         .hero-name {
-            font-size: 3.5rem;
+            font-size: clamp(3rem, 8vw, 6rem);
             font-weight: 900;
-            background: linear-gradient(135deg, #fff, var(--primary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 0.5rem;
-        }
-        .hero-title {
-            font-size: 1.3rem;
-            color: var(--primary-color);
+            color: var(--accent);
+            line-height: 1;
             margin-bottom: 1rem;
-            font-weight: 600;
+            font-family: 'Arial Black', sans-serif;
+            letter-spacing: -0.02em;
         }
-        .hero-desc {
-            color: var(--text-light);
+        .hero-role {
             font-size: 1rem;
-            max-width: 500px;
-            margin: 0 auto 2rem;
-            line-height: 1.7;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-family: 'Courier New', monospace;
         }
-        .hero-btns {
+        .hero-role span {
+            color: var(--text);
+            border-right: 2px solid var(--text);
+            animation: blink 1s infinite;
+            padding-right: 2px;
+        }
+        @keyframes blink {
+            0%, 100% { border-color: var(--text); }
+            50% { border-color: transparent; }
+        }
+        .hero-bio {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            max-width: 520px;
+            line-height: 1.8;
+            margin-bottom: 3rem;
+            font-family: sans-serif;
+        }
+        .hero-bio strong { color: var(--text); font-weight: 600; }
+        .hero-actions {
             display: flex;
             gap: 1rem;
-            justify-content: center;
             flex-wrap: wrap;
         }
-        .status-dot {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(0,255,120,0.1);
-            border: 1px solid rgba(0,255,120,0.3);
-            border-radius: 2rem;
-            padding: 0.4rem 1rem;
+        .btn-main {
+            background: var(--accent);
+            color: var(--bg);
+            border: none;
+            padding: 0.8rem 1.8rem;
             font-size: 0.85rem;
-            color: #00ff78;
-            margin-bottom: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: opacity 0.2s;
+            font-family: 'Courier New', monospace;
         }
-        .status-dot span {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #00ff78;
-            box-shadow: 0 0 8px #00ff78;
-            animation: pulse-green 2s infinite;
-            flex-shrink: 0;
+        .btn-main:hover { opacity: 0.85; }
+        .btn-outline {
+            background: transparent;
+            color: var(--text-muted);
+            border: 1px solid var(--border-hover);
+            padding: 0.8rem 1.8rem;
+            font-size: 0.85rem;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+            font-family: 'Courier New', monospace;
         }
-        @keyframes pulse-green {
-            0%, 100% { box-shadow: 0 0 6px #00ff78; }
-            50% { box-shadow: 0 0 16px #00ff78; }
+        .btn-outline:hover {
+            color: var(--text);
+            border-color: var(--text-muted);
         }
 
-        /* ── Навыки ── */
-        .skills-section {
-            padding: 5rem 0;
+        /* ── Секции ── */
+        section {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
+            border-top: 1px solid var(--border);
         }
-        .skills-section h2 {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 800;
+        .section-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
             margin-bottom: 3rem;
-            background: linear-gradient(135deg, #fff, var(--primary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
-        .skills-grid {
+        .section-label::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: var(--border);
+        }
+
+        /* ── Стек ── */
+        .stack-list {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
         }
-        .skill-card {
-            background: linear-gradient(135deg, rgba(26,31,58,0.9), rgba(45,55,72,0.9));
-            border: 1px solid rgba(0,212,255,0.15);
-            border-radius: 1rem;
-            padding: 2rem 1.5rem;
-            text-align: center;
-            transition: all 0.3s;
-            cursor: default;
+        .stack-item {
+            background: var(--bg);
+            padding: 1.5rem;
+            transition: background 0.2s;
         }
-        .skill-card:hover {
-            border-color: rgba(0,212,255,0.5);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,212,255,0.15);
-        }
-        .skill-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-        .skill-name {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--text-dark);
-            margin-bottom: 0.5rem;
-        }
-        .skill-level {
-            font-size: 0.8rem;
-            color: var(--primary-color);
+        .stack-item:hover { background: var(--bg3); }
+        .stack-item-icon { font-size: 1.5rem; margin-bottom: 0.7rem; }
+        .stack-item-name {
+            font-size: 0.9rem;
+            color: var(--text);
             font-weight: 600;
+            margin-bottom: 0.3rem;
+            font-family: sans-serif;
         }
-        .skill-bar-wrap {
-            width: 100%;
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 2px;
-            margin-top: 0.8rem;
-            overflow: hidden;
-        }
-        .skill-bar {
-            height: 100%;
-            border-radius: 2px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            transition: width 1s ease;
+        .stack-item-level {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            letter-spacing: 0.05em;
         }
 
         /* ── Проекты ── */
-        .projects-section {
-            padding: 5rem 0;
+        .projects-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
         }
-        .projects-section h2 {
-            text-align: center;
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 3rem;
-            background: linear-gradient(135deg, #fff, var(--primary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-        .project-card {
-            background: linear-gradient(135deg, rgba(26,31,58,0.9), rgba(45,55,72,0.9));
-            border: 1px solid rgba(0,212,255,0.15);
-            border-radius: 1rem;
+        .project-item {
+            background: var(--bg);
             padding: 2rem;
-            transition: all 0.3s;
-        }
-        .project-card:hover {
-            border-color: rgba(0,212,255,0.4);
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,212,255,0.1);
-        }
-        .project-header {
-            display: flex;
-            align-items: center;
+            display: grid;
+            grid-template-columns: 1fr auto;
             gap: 1rem;
-            margin-bottom: 1rem;
+            align-items: start;
+            transition: background 0.2s;
+            cursor: default;
         }
-        .project-icon {
-            font-size: 2rem;
-            width: 56px;
-            height: 56px;
-            background: rgba(0,212,255,0.1);
-            border-radius: 0.8rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
+        .project-item:hover { background: var(--bg3); }
+        .project-num {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            font-family: 'Courier New', monospace;
         }
-        .project-title {
-            font-size: 1.2rem;
+        .project-name {
+            font-size: 1.1rem;
             font-weight: 700;
-            color: var(--text-dark);
-        }
-        .project-type {
-            font-size: 0.8rem;
-            color: var(--primary-color);
-            font-weight: 600;
+            color: var(--text);
+            margin-bottom: 0.5rem;
+            font-family: sans-serif;
         }
         .project-desc {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            line-height: 1.6;
-            margin-bottom: 1.2rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.7;
+            font-family: sans-serif;
+            max-width: 500px;
         }
         .project-tags {
             display: flex;
             flex-wrap: wrap;
-            gap: 0.5rem;
+            gap: 0.4rem;
+            margin-top: 1rem;
         }
-        .tag {
-            background: rgba(0,212,255,0.1);
-            border: 1px solid rgba(0,212,255,0.2);
-            color: var(--primary-color);
-            font-size: 0.75rem;
-            padding: 0.2rem 0.7rem;
-            border-radius: 2rem;
-            font-weight: 600;
+        .project-tag {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            border: 1px solid var(--border);
+            padding: 0.2rem 0.6rem;
+            letter-spacing: 0.05em;
+            font-family: 'Courier New', monospace;
+        }
+        .project-arrow {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            margin-top: 0.3rem;
         }
 
-        /* ── Контакты ── */
-        .contact-section {
-            padding: 5rem 0;
+        /* ── О себе ── */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+        }
+        .about-text {
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            line-height: 1.9;
+            font-family: sans-serif;
+        }
+        .about-text p { margin-bottom: 1.2rem; }
+        .about-text strong { color: var(--text); }
+        .about-facts { display: flex; flex-direction: column; gap: 1.5rem; }
+        .fact {
+            border-left: 1px solid var(--border);
+            padding-left: 1.2rem;
+        }
+        .fact-label {
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 0.3rem;
+        }
+        .fact-value {
+            font-size: 0.9rem;
+            color: var(--text);
+            font-family: sans-serif;
+        }
+
+        /* ── Контакт ── */
+        .contact-block {
             text-align: center;
+            padding: 4rem 0;
         }
-        .contact-section h2 {
-            font-size: 2rem;
-            font-weight: 800;
+        .contact-block h2 {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 900;
+            color: var(--accent);
+            font-family: 'Arial Black', sans-serif;
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, #fff, var(--primary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            letter-spacing: -0.02em;
         }
-        .contact-section p {
-            color: var(--text-light);
-            margin-bottom: 2rem;
+        .contact-block p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 2.5rem;
+            font-family: sans-serif;
         }
-        .contact-links {
+
+        /* ── Футер ── */
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 2rem;
             display: flex;
-            gap: 1rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        .contact-link {
-            display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 0.7rem;
-            background: linear-gradient(135deg, rgba(26,31,58,0.9), rgba(45,55,72,0.9));
-            border: 1px solid rgba(0,212,255,0.2);
-            border-radius: 0.8rem;
-            padding: 1rem 1.5rem;
-            color: var(--text-dark);
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s;
+            max-width: 900px;
+            margin: 0 auto;
         }
-        .contact-link:hover {
-            border-color: rgba(0,212,255,0.5);
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0,212,255,0.15);
-            color: var(--primary-color);
+        footer span {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            letter-spacing: 0.05em;
         }
 
-        /* ── Языки ── */
-        .langs {
-            display: flex;
-            gap: 0.7rem;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-        .lang-badge {
-            background: rgba(0,212,255,0.1);
-            border: 1px solid rgba(0,212,255,0.2);
-            color: var(--primary-color);
+        /* ── Онлайн индикатор ── */
+        .online {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
             font-size: 0.8rem;
-            padding: 0.3rem 0.9rem;
-            border-radius: 2rem;
-            font-weight: 600;
+            color: var(--green);
+            font-family: sans-serif;
+        }
+        .online-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--green);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
         }
 
-        @media (max-width: 600px) {
-            .hero-name { font-size: 2.5rem; }
+        @media (max-width: 640px) {
+            .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+            .project-item { grid-template-columns: 1fr; }
+            .project-arrow { display: none; }
+            nav { padding: 1rem; }
+            .nav-links { gap: 1rem; }
         }
     </style>
 </head>
 <body>
+
     <!-- Навигация -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="logo">Denis.dev</div>
-            <ul class="nav-links">
-                <li><a href="#skills">Навыки</a></li>
-                <li><a href="#projects">Проекты</a></li>
-                <li><a href="#contact">Контакты</a></li>
-                <li><a href="index.html">MorphVPN</a></li>
-            </ul>
-        </div>
+    <nav>
+        <div class="nav-logo">~/<span>denis</span></div>
+        <ul class="nav-links">
+            <li><a href="#about">about</a></li>
+            <li><a href="#stack">stack</a></li>
+            <li><a href="#projects">projects</a></li>
+            <li><a href="#contact">contact</a></li>
+        </ul>
     </nav>
 
     <!-- Герой -->
-    <section class="portfolio-hero">
-        <div class="container">
-            <div class="avatar">👨‍💻</div>
-            <div class="status-dot"><span></span> Открыт для проектов</div>
-            <h1 class="hero-name">Denis</h1>
-            <div class="hero-title">Full-Stack Developer</div>
-            <div class="langs">
-                <span class="lang-badge">🇷🇺 Русский</span>
-                <span class="lang-badge">🇬🇧 English</span>
+    <div class="hero">
+        <div class="hero-inner">
+            <div class="hero-greeting">
+                <span>▸</span> hello, world
             </div>
-            <p class="hero-desc">
-                Разрабатываю сайты, боты и сервисы. Люблю чистый код и красивые интерфейсы. Создал MorphVPN — VPN сервис с тысячами пользователей.
+            <h1 class="hero-name">Denis</h1>
+            <div class="hero-role">
+                <span>Full-Stack Developer</span>
+            </div>
+            <p class="hero-bio">
+                Пишу код на <strong>Python, JavaScript и C++</strong>. Делаю сайты, Telegram боты и серверные штуки. Основал <strong>MorphVPN</strong> — VPN сервис с серверами в 10+ странах. Говорю по-русски и по-английски.
             </p>
-            <div class="hero-btns">
-                <a href="#projects" class="btn btn-primary">Мои проекты</a>
-                <a href="https://t.me/slogg12" class="btn btn-secondary" target="_blank">Написать в Telegram</a>
+            <div class="hero-actions">
+                <a href="#projects" class="btn-main">посмотреть работы</a>
+                <a href="https://t.me/slogg12" target="_blank" class="btn-outline">написать мне</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- О себе -->
+    <section id="about">
+        <div class="section-label">01 — about</div>
+        <div class="about-grid">
+            <div class="about-text">
+                <p>
+                    Привет. Меня зовут Денис, я разработчик. Начинал с простых скриптов на Python, потом дошло до полноценных продуктов с базами данных, серверами и нормальным фронтом.
+                </p>
+                <p>
+                    Мне нравится когда код работает чисто и без лишнего. Не люблю переусложнять — если задачу можно решить проще, решаю проще.
+                </p>
+                <p>
+                    Сейчас развиваю <strong>MorphVPN</strong> и берусь за интересные проекты.
+                </p>
+            </div>
+            <div class="about-facts">
+                <div class="fact">
+                    <div class="fact-label">статус</div>
+                    <div class="fact-value">
+                        <span class="online"><span class="online-dot"></span>открыт для проектов</span>
+                    </div>
+                </div>
+                <div class="fact">
+                    <div class="fact-label">языки</div>
+                    <div class="fact-value">Русский, English</div>
+                </div>
+                <div class="fact">
+                    <div class="fact-label">специализация</div>
+                    <div class="fact-value">Backend, Боты, VPN-инфраструктура</div>
+                </div>
+                <div class="fact">
+                    <div class="fact-label">telegram</div>
+                    <div class="fact-value">@slogg12</div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- Навыки -->
-    <section id="skills" class="skills-section">
-        <div class="container">
-            <h2>Технологии</h2>
-            <div class="skills-grid">
-                <div class="skill-card">
-                    <div class="skill-icon">🐍</div>
-                    <div class="skill-name">Python</div>
-                    <div class="skill-level">Продвинутый</div>
-                    <div class="skill-bar-wrap"><div class="skill-bar" style="width:85%"></div></div>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">⚡</div>
-                    <div class="skill-name">JavaScript</div>
-                    <div class="skill-level">Продвинутый</div>
-                    <div class="skill-bar-wrap"><div class="skill-bar" style="width:80%"></div></div>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">⚙️</div>
-                    <div class="skill-name">C++</div>
-                    <div class="skill-level">Средний</div>
-                    <div class="skill-bar-wrap"><div class="skill-bar" style="width:60%"></div></div>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">🌐</div>
-                    <div class="skill-name">HTML / CSS</div>
-                    <div class="skill-level">Продвинутый</div>
-                    <div class="skill-bar-wrap"><div class="skill-bar" style="width:90%"></div></div>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">🗄️</div>
-                    <div class="skill-name">PostgreSQL</div>
-                    <div class="skill-level">Средний</div>
-                    <div class="skill-bar-wrap"><div class="skill-bar" style="width:65%"></div></div>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">🐧</div>
-                    <div class="skill-name">Linux / VPS</div>
-                    <div class="skill-level">Средний</div>
-                    <div class="skill-bar-wrap"><div class="skill-bar" style="width:70%"></div></div>
-                </div>
+    <!-- Стек -->
+    <section id="stack">
+        <div class="section-label">02 — stack</div>
+        <div class="stack-list">
+            <div class="stack-item">
+                <div class="stack-item-icon">🐍</div>
+                <div class="stack-item-name">Python</div>
+                <div class="stack-item-level">основной язык</div>
+            </div>
+            <div class="stack-item">
+                <div class="stack-item-icon">⚡</div>
+                <div class="stack-item-name">JavaScript</div>
+                <div class="stack-item-level">Node.js / frontend</div>
+            </div>
+            <div class="stack-item">
+                <div class="stack-item-icon">⚙️</div>
+                <div class="stack-item-name">C++</div>
+                <div class="stack-item-level">системное</div>
+            </div>
+            <div class="stack-item">
+                <div class="stack-item-icon">🌐</div>
+                <div class="stack-item-name">HTML / CSS</div>
+                <div class="stack-item-level">вёрстка</div>
+            </div>
+            <div class="stack-item">
+                <div class="stack-item-icon">🗄️</div>
+                <div class="stack-item-name">PostgreSQL</div>
+                <div class="stack-item-level">базы данных</div>
+            </div>
+            <div class="stack-item">
+                <div class="stack-item-icon">🐧</div>
+                <div class="stack-item-name">Linux</div>
+                <div class="stack-item-level">VPS / сервера</div>
+            </div>
+            <div class="stack-item">
+                <div class="stack-item-icon">🚂</div>
+                <div class="stack-item-name">Railway</div>
+                <div class="stack-item-level">деплой</div>
+            </div>
+            <div class="stack-item">
+                <div class="stack-item-icon">🔒</div>
+                <div class="stack-item-name">3X-UI / Xray</div>
+                <div class="stack-item-level">VPN инфра</div>
             </div>
         </div>
     </section>
 
     <!-- Проекты -->
-    <section id="projects" class="projects-section">
-        <div class="container">
-            <h2>Проекты</h2>
-            <div class="projects-grid">
-                <div class="project-card">
-                    <div class="project-header">
-                        <div class="project-icon">🔒</div>
-                        <div>
-                            <div class="project-title">MorphVPN</div>
-                            <div class="project-type">VPN Сервис</div>
-                        </div>
+    <section id="projects">
+        <div class="section-label">03 — projects</div>
+        <div class="projects-list">
+            <div class="project-item">
+                <div>
+                    <div class="project-num">001</div>
+                    <div class="project-name">MorphVPN</div>
+                    <div class="project-desc">
+                        VPN сервис который я сделал с нуля. Сайт, Telegram бот с оплатой, панель 3X-UI, автоматическая выдача подписок. Серверы в 10+ странах, работает на Railway.
                     </div>
-                    <p class="project-desc">
-                        Полноценный VPN сервис с сайтом, Telegram ботом, панелью управления и автоматической выдачей подписок. Серверы в 10+ странах.
-                    </p>
                     <div class="project-tags">
-                        <span class="tag">Python</span>
-                        <span class="tag">Node.js</span>
-                        <span class="tag">PostgreSQL</span>
-                        <span class="tag">3X-UI</span>
-                        <span class="tag">Railway</span>
+                        <span class="project-tag">Python</span>
+                        <span class="project-tag">Node.js</span>
+                        <span class="project-tag">PostgreSQL</span>
+                        <span class="project-tag">3X-UI</span>
+                        <span class="project-tag">Railway</span>
+                        <span class="project-tag">VLESS Reality</span>
                     </div>
                 </div>
-
-                <div class="project-card">
-                    <div class="project-header">
-                        <div class="project-icon">🤖</div>
-                        <div>
-                            <div class="project-title">Telegram Боты</div>
-                            <div class="project-type">Автоматизация</div>
-                        </div>
+                <div class="project-arrow">↗</div>
+            </div>
+            <div class="project-item">
+                <div>
+                    <div class="project-num">002</div>
+                    <div class="project-name">Telegram боты</div>
+                    <div class="project-desc">
+                        Делаю ботов под задачи: приём платежей через ЮМани, управление подписками, рассылки, статистика, админ-панели. Всё с базой данных и нормальной архитектурой.
                     </div>
-                    <p class="project-desc">
-                        Разработка Telegram ботов для бизнеса: приём платежей, управление подписками, рассылки, статистика и админ-панели.
-                    </p>
                     <div class="project-tags">
-                        <span class="tag">Python</span>
-                        <span class="tag">python-telegram-bot</span>
-                        <span class="tag">PostgreSQL</span>
+                        <span class="project-tag">Python</span>
+                        <span class="project-tag">python-telegram-bot</span>
+                        <span class="project-tag">PostgreSQL</span>
                     </div>
                 </div>
-
-                <div class="project-card">
-                    <div class="project-header">
-                        <div class="project-icon">🌍</div>
-                        <div>
-                            <div class="project-title">Веб-сайты</div>
-                            <div class="project-type">Frontend / Backend</div>
-                        </div>
+                <div class="project-arrow">↗</div>
+            </div>
+            <div class="project-item">
+                <div>
+                    <div class="project-num">003</div>
+                    <div class="project-name">Веб-сайты</div>
+                    <div class="project-desc">
+                        Верстаю и пишу бэкенд для сайтов. Адаптивный дизайн, REST API, интеграция с базами данных. Без лишних фреймворков — только то что нужно.
                     </div>
-                    <p class="project-desc">
-                        Создание современных сайтов с красивым дизайном, адаптивной вёрсткой, REST API и интеграцией с базами данных.
-                    </p>
                     <div class="project-tags">
-                        <span class="tag">HTML/CSS</span>
-                        <span class="tag">JavaScript</span>
-                        <span class="tag">Node.js</span>
-                        <span class="tag">Express</span>
+                        <span class="project-tag">HTML/CSS</span>
+                        <span class="project-tag">JavaScript</span>
+                        <span class="project-tag">Express</span>
                     </div>
                 </div>
+                <div class="project-arrow">↗</div>
             </div>
         </div>
     </section>
 
-    <!-- Контакты -->
-    <section id="contact" class="contact-section">
-        <div class="container">
-            <h2>Связаться со мной</h2>
-            <p>Есть проект? Напиши — обсудим детали</p>
-            <div class="contact-links">
-                <a href="https://t.me/slogg12" class="contact-link" target="_blank">
-                    <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.328-.373-.115l-6.869 4.332-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.461c.54-.203 1.01.122.84.951z"/>
-                    </svg>
-                    @slogg12
-                </a>
-            </div>
+    <!-- Контакт -->
+    <section id="contact">
+        <div class="section-label">04 — contact</div>
+        <div class="contact-block">
+            <h2>Есть проект?</h2>
+            <p>Напиши в Telegram — отвечу быстро</p>
+            <a href="https://t.me/slogg12" target="_blank" class="btn-main">→ @slogg12</a>
         </div>
     </section>
 
     <!-- Футер -->
-    <footer class="footer">
-        <div class="container">
-            <p>&copy; 2026 Denis. Full-Stack Developer</p>
-            <div class="footer-links">
-                <a href="index.html">MorphVPN</a>
-                <a href="https://t.me/slogg12" target="_blank">Telegram</a>
-            </div>
-        </div>
+    <footer>
+        <span>© 2026 Denis</span>
+        <span>built by hand</span>
     </footer>
 
-    <!-- Кнопка Telegram -->
-    <a href="https://t.me/slogg12" class="telegram-support" target="_blank" title="Написать в Telegram">
-        <span class="support-text">Написать</span>
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm5.894 8.221l-1.97 9.28c-.145.658-.537.818-1.084.508l-3-2.21-1.446 1.394c-.16.16-.295.295-.605.295l.213-3.053 5.56-5.023c.242-.213-.054-.328-.373-.115l-6.869 4.332-2.96-.924c-.64-.203-.658-.64.135-.954l11.566-4.461c.54-.203 1.01.122.84.951z"/>
-        </svg>
-    </a>
-
-    <script src="script.js"></script>
 </body>
 </html>
