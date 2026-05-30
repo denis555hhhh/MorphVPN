@@ -315,6 +315,45 @@
             color: var(--text-dim);
             margin-top: 0.3rem;
         }
+        .project-btns {
+            display: flex;
+            gap: 0.7rem;
+            margin-top: 1.2rem;
+            flex-wrap: wrap;
+        }
+        .project-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.75rem;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.05em;
+            color: #fff;
+            text-decoration: none;
+            background: #000;
+            border: 1px solid #333;
+            padding: 0.45rem 1rem;
+            transition: all 0.25s;
+            text-shadow: 0 0 8px rgba(255,255,255,0.4);
+            box-shadow: 0 0 10px rgba(255,255,255,0.05);
+        }
+        .project-btn:hover {
+            border-color: #fff;
+            text-shadow: 0 0 12px #fff, 0 0 25px rgba(255,255,255,0.5);
+            box-shadow: 0 0 20px rgba(255,255,255,0.15);
+        }
+        .project-btn-tg {
+            border-color: #229ED9;
+            color: #229ED9;
+            text-shadow: 0 0 8px rgba(34,158,217,0.5);
+            box-shadow: 0 0 10px rgba(34,158,217,0.1);
+        }
+        .project-btn-tg:hover {
+            border-color: #229ED9;
+            text-shadow: 0 0 12px #229ED9, 0 0 25px rgba(34,158,217,0.6);
+            box-shadow: 0 0 20px rgba(34,158,217,0.3);
+            color: #fff;
+        }
 
         /* ── О себе ── */
         .about-grid {
@@ -614,6 +653,10 @@
                         <span class="project-tag">3X-UI</span>
                         <span class="project-tag">Railway</span>
                         <span class="project-tag">VLESS Reality</span>
+                    </div>
+                    <div class="project-btns">
+                        <a href="https://morphvpn-production.up.railway.app" target="_blank" class="project-btn">🌐 Открыть сайт</a>
+                        <a href="https://t.me/MorphVPN1_bot" target="_blank" class="project-btn project-btn-tg">✈️ Telegram бот</a>
                     </div>
                 </div>
                 <div class="project-arrow">↗</div>
