@@ -339,7 +339,7 @@ async def get_photo_id(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     """Временный обработчик для получения file_id фото"""
     if update.message.photo:
         file_id = update.message.photo[-1].file_id
-        await update.message.reply_text(f"file_id:\n`{file_id}`", parse_mode='Markdown')
+        await update.message.reply_text(f"file_id: {file_id}")
 
 
 async def paid_plan(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
